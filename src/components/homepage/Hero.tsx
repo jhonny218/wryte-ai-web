@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button.tsx';
-import { buttonVariants } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { HeroCards } from './HeroCards';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 

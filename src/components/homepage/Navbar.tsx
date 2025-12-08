@@ -7,7 +7,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
-import { buttonVariants } from '@/components/ui/button.tsx';
+import { buttonVariants } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import { LogoIcon } from './Icons';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
