@@ -5,6 +5,7 @@ This document describes the shadcn/ui theme setup for the Wryte AI Web applicati
 ## What was installed
 
 ### Dependencies
+
 - **tailwindcss**: Core Tailwind CSS framework (v4)
 - **@tailwindcss/postcss**: PostCSS plugin for Tailwind CSS v4
 - **postcss**: CSS transformation tool
@@ -20,13 +21,15 @@ This document describes the shadcn/ui theme setup for the Wryte AI Web applicati
 3. **`components.json`**: Shadcn/ui CLI configuration
 4. **`src/index.css`**: Global styles with theme CSS variables
 5. **`src/lib/utils.ts`**: `cn()` utility for merging classNames
-6. **`tsconfig.app.json`**: Updated with path aliases (@/*)
+6. **`tsconfig.app.json`**: Updated with path aliases (@/\*)
 7. **`vite.config.ts`**: Updated with path alias resolution
 
 ## Theme Features
 
 ### Color Palette
+
 The theme includes a comprehensive color system with:
+
 - Light and dark mode support (via `.dark` class)
 - Primary, secondary, muted, and accent colors
 - Destructive colors for error states
@@ -35,30 +38,36 @@ The theme includes a comprehensive color system with:
 - Semantic tokens for background, foreground, borders, inputs, and focus rings
 
 ### Typography
+
 - **Font Sans**: Geist with system fallbacks
-- **Font Serif**: Geist with serif fallbacks  
+- **Font Serif**: Geist with serif fallbacks
 - **Font Mono**: Geist Mono with monospace fallbacks
 
 ### Border Radius
+
 Multiple radius sizes:
+
 - `sm`: `--radius - 4px`
 - `md`: `--radius - 2px`
 - `lg`: `--radius` (0.625rem)
 - `xl`: `--radius + 4px`
 
 ### Shadows
+
 8 shadow variants from `2xs` to `2xl` for depth and elevation
 
 ## Usage
 
 ### Using the cn() utility
-```tsx
-import { cn } from "@/lib/utils"
 
-<div className={cn("base-class", conditionalClass && "additional-class")} />
+```tsx
+import { cn } from '@/lib/utils';
+
+<div className={cn('base-class', conditionalClass && 'additional-class')} />;
 ```
 
 ### Using theme colors
+
 ```tsx
 // Via Tailwind classes
 <div className="bg-primary text-primary-foreground" />
@@ -69,15 +78,17 @@ import { cn } from "@/lib/utils"
 ```
 
 ### Dark Mode
+
 To enable dark mode, add the `dark` class to your root element:
+
 ```tsx
-<html className="dark">
-  {/* Your app */}
-</html>
+<html className="dark">{/* Your app */}</html>
 ```
 
 ### Example Component
+
 See `src/components/ui/Button.tsx` for a complete example of a shadcn-style component using:
+
 - The `cn()` utility
 - Theme colors
 - Variants with `class-variance-authority`
@@ -99,6 +110,7 @@ Components will be installed to `src/components/ui/` and will automatically use 
 ## Path Aliases
 
 The following import aliases are configured:
+
 - `@/components` → `src/components`
 - `@/lib` → `src/lib`
 - `@/hooks` → `src/hooks`

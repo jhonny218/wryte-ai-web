@@ -1,0 +1,24 @@
+{
+  "printWidth": 100,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "importOrder": [
+    "^path$",
+    "^vite$",
+    "^@vitejs/(.*)$",
+    "^react$",
+    "^react-dom/client$",
+    "^react/(.*)$",
+    "^globals$",
+    "^zod$",
+    "^axios$",
+    "^date-fns$",
+    "^react-hook-form$",
+    "^use-intl$",
+    "^@radix-ui/(.*)$",
+    "^@tanstack/(.*)$",
+    "^@clerk/(.*)$",
+    "^[./]"
+  ]
+}

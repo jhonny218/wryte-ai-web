@@ -1,19 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
 
-import { ClerkProvider } from '@clerk/clerk-react'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClient } from './lib/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { env } from './config/env'
+import { ClerkProvider } from '@clerk/clerk-react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './lib/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { env } from './config/env';
 
 // Import your Publishable Key
-const PUBLISHABLE_KEY = env.VITE_CLERK_PUBLISHABLE_KEY
+const PUBLISHABLE_KEY = env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
-  throw new Error('Missing Publishable Key')
+  throw new Error('Missing Publishable Key');
 }
 
 createRoot(document.getElementById('root')!).render(
@@ -24,5 +24,5 @@ createRoot(document.getElementById('root')!).render(
         <ReactQueryDevtools />
       </QueryClientProvider>
     </ClerkProvider>
-  </StrictMode>,
-)
+  </StrictMode>
+);

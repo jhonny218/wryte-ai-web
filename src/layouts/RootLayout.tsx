@@ -1,33 +1,29 @@
-import { Outlet } from 'react-router-dom'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
+import { Outlet } from 'react-router-dom';
+// import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
+import { Navbar } from '@/components/homepage/Navbar';
+import { siteConfig } from '@/config/site';
+import { Tooltip } from '@/components/ui/tooltip';
 
 export function RootLayout() {
   return (
-    <div className="min-h-screen bg-background font-sans antialiased">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center justify-between">
-          <div className="mr-4 flex">
-            <a className="mr-6 flex items-center space-x-2" href="/">
-              <span className="font-bold inline-block">Wryte AI</span>
-            </a>
-          </div>
-          <div className="flex items-center space-x-4">
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button className="text-sm font-medium transition-colors hover:text-primary">
-                  Sign In
-                </button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </div>
-        </div>
-      </header>
-      <main className="container py-6">
+    <div className="bg-background min-h-screen font-sans antialiased">
+      <Navbar />
+      <main>
         <Outlet />
       </main>
+      <footer className="mb-5 flex w-full items-center justify-center py-3">
+        <span className="text-sm md:text-base">
+          © {new Date().getFullYear()} {siteConfig.name}. Made with 🧠 and{' '}
+        </span>
+        <Tooltip
+          content="Built with React, TypeScript, Vite, Tailwind CSS & shadcn/ui"
+          placement="top"
+        >
+          <span className="ml-1 cursor-help text-sm underline decoration-dotted md:text-base">
+            code.
+          </span>
+        </Tooltip>
+      </footer>
     </div>
-  )
+  );
 }

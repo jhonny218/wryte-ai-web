@@ -4,62 +4,62 @@
 
 ```css
 /* Main Colors */
---background: #121212    /* Deep dark gray */
---foreground: #ffffff    /* Pure white */
---primary: #ff6f00       /* Vibrant orange 🧡 */
---secondary: #00d1b2     /* Teal 💚 */
+--background: #121212 /* Deep dark gray */ --foreground: #ffffff /* Pure white */ --primary: #ff6f00
+  /* Vibrant orange 🧡 */ --secondary: #00d1b2 /* Teal 💚 */;
 ```
 
 ## ✍️ Typography
 
-| Purpose | Font | Weight | Usage |
-|---------|------|--------|-------|
-| **Headlines/Titles** | Raleway | 700-800 | `<h1>` - `<h6>`, `.font-heading` |
-| **Body Text** | Poppins | 300-700 | `<p>`, `<div>`, default, `.font-body` |
-| **Accent Text** | Nunito | 400-800 | Buttons, labels, `.font-accent` |
+| Purpose              | Font    | Weight  | Usage                                 |
+| -------------------- | ------- | ------- | ------------------------------------- |
+| **Headlines/Titles** | Raleway | 700-800 | `<h1>` - `<h6>`, `.font-heading`      |
+| **Body Text**        | Poppins | 300-700 | `<p>`, `<div>`, default, `.font-body` |
+| **Accent Text**      | Nunito  | 400-800 | Buttons, labels, `.font-accent`       |
 
 ## 🚀 Quick Examples
 
 ### Button (Primary - Orange)
+
 ```tsx
-<button className="px-6 py-3 bg-primary text-primary-foreground font-accent font-semibold rounded-lg">
+<button className="rounded-lg bg-primary px-6 py-3 font-accent font-semibold text-primary-foreground">
   Click Me
 </button>
 ```
 
 ### Button (Secondary - Teal)
+
 ```tsx
-<button className="px-6 py-3 bg-secondary text-secondary-foreground font-accent font-semibold rounded-lg">
+<button className="rounded-lg bg-secondary px-6 py-3 font-accent font-semibold text-secondary-foreground">
   Secondary Action
 </button>
 ```
 
 ### Heading
+
 ```tsx
-<h1 className="text-4xl font-heading font-bold text-foreground">
-  Page Title
-</h1>
+<h1 className="font-heading text-4xl font-bold text-foreground">Page Title</h1>
 ```
 
 ### Body Text
+
 ```tsx
-<p className="text-base font-body text-foreground/80">
-  This is regular body text using Poppins.
-</p>
+<p className="font-body text-base text-foreground/80">This is regular body text using Poppins.</p>
 ```
 
 ### Card
+
 ```tsx
-<div className="p-6 bg-card border border-border rounded-lg shadow-lg">
-  <h3 className="text-xl font-heading font-semibold mb-2">Card Title</h3>
+<div className="rounded-lg border border-border bg-card p-6 shadow-lg">
+  <h3 className="mb-2 font-heading text-xl font-semibold">Card Title</h3>
   <p className="font-body text-muted-foreground">Card content</p>
 </div>
 ```
 
 ### Input
+
 ```tsx
-<input 
-  className="px-4 py-3 bg-input border border-border rounded-lg text-foreground font-body focus:ring-2 focus:ring-primary"
+<input
+  className="rounded-lg border border-border bg-input px-4 py-3 font-body text-foreground focus:ring-2 focus:ring-primary"
   placeholder="Enter text..."
 />
 ```
@@ -67,6 +67,7 @@
 ## 🎯 Tailwind Classes - Cheat Sheet
 
 ### Backgrounds
+
 - `bg-background` → #121212
 - `bg-primary` → #ff6f00 (orange)
 - `bg-secondary` → #00d1b2 (teal)
@@ -74,22 +75,26 @@
 - `bg-muted` → #2a2a2a
 
 ### Text Colors
+
 - `text-foreground` → #ffffff
 - `text-primary` → #ff6f00
 - `text-secondary` → #00d1b2
 - `text-muted-foreground` → #b0b0b0
 
 ### Fonts
+
 - `font-heading` → Raleway
 - `font-body` → Poppins (default)
 - `font-accent` → Nunito
 
 ### Borders
+
 - `border-border` → #3a3a3a
 - `border-primary` → #ff6f00
 - `border-secondary` → #00d1b2
 
 ### Shadows
+
 - `shadow-sm` / `shadow-md` / `shadow-lg` / `shadow-xl`
 
 ## 💡 Pro Tips

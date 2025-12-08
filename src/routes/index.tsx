@@ -1,29 +1,32 @@
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
-import { SignedIn, SignedOut } from '@clerk/clerk-react'
-import { RootLayout } from '../layouts/RootLayout'
-import { DashboardLayout } from '../layouts/DashboardLayout'
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { SignedIn, SignedOut } from '@clerk/clerk-react';
+import { RootLayout } from '../layouts/RootLayout';
+import { DashboardLayout } from '../layouts/DashboardLayout';
 
 // Pages
-import HomePage from '../pages/HomePage'
-import OnboardingPage from '../pages/OnboardingPage'
-import NotFoundPage from '../pages/NotFoundPage'
+import HomePage from '../pages/HomePage';
+import OnboardingPage from '../pages/OnboardingPage';
+import NotFoundPage from '../pages/NotFoundPage';
 
 export default function AppRoutes() {
   return (
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<RootLayout />}>
-        <Route index element={
-          <>
-            <SignedOut>
-              <HomePage />
-            </SignedOut>
-            <SignedIn>
-              {/* Check if user has org, if not -> onboarding, else -> dashboard */}
-              <Navigate to="/onboarding" replace />
-            </SignedIn>
-          </>
-        } />
+        <Route
+          index
+          element={
+            <>
+              <SignedOut>
+                <HomePage />
+              </SignedOut>
+              <SignedIn>
+                {/* Check if user has org, if not -> onboarding, else -> dashboard */}
+                <Navigate to="/onboarding" replace />
+              </SignedIn>
+            </>
+          }
+        />
       </Route>
 
       {/* Protected routes */}
@@ -50,7 +53,7 @@ export default function AppRoutes() {
       {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
-  )
+  );
 }
 
 function ProtectedRoute() {
@@ -63,5 +66,5 @@ function ProtectedRoute() {
         <Navigate to="/sign-in" replace />
       </SignedOut>
     </>
-  )
+  );
 }

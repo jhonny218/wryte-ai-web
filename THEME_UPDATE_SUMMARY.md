@@ -7,13 +7,16 @@ Your Wryte AI theme has been successfully updated with a custom color scheme and
 ## 🎨 Color Scheme
 
 ### Main Colors
+
 - **Background**: `#121212` - Deep dark gray for reduced eye strain
 - **Foreground**: `#ffffff` - Pure white for maximum contrast
 - **Primary**: `#ff6f00` - Vibrant orange for CTAs and important actions
 - **Secondary**: `#00d1b2` - Bright teal for secondary actions and accents
 
 ### Design Philosophy
+
 The color scheme follows a **dark-first** approach with vibrant accent colors that provide:
+
 - High visual impact
 - Clear hierarchy
 - Excellent readability
@@ -22,13 +25,15 @@ The color scheme follows a **dark-first** approach with vibrant accent colors th
 ## ✍️ Typography
 
 ### Font System
-| Purpose | Font | Usage |
-|---------|------|-------|
-| **Headlines** | Raleway | All `<h1>` - `<h6>` tags |
-| **Body** | Poppins | Default for all text |
-| **Accent** | Nunito | Buttons, labels, UI elements |
+
+| Purpose       | Font    | Usage                        |
+| ------------- | ------- | ---------------------------- |
+| **Headlines** | Raleway | All `<h1>` - `<h6>` tags     |
+| **Body**      | Poppins | Default for all text         |
+| **Accent**    | Nunito  | Buttons, labels, UI elements |
 
 ### Why These Fonts?
+
 - **Raleway**: Geometric and modern, perfect for bold statements
 - **Poppins**: Highly readable, friendly, great for body text
 - **Nunito**: Rounded and approachable, ideal for UI elements
@@ -85,10 +90,10 @@ The color scheme follows a **dark-first** approach with vibrant accent colors th
 To see all theme components in action:
 
 ```tsx
-import { ThemeDemo } from '@/components/ThemeDemo'
+import { ThemeDemo } from '@/components/ThemeDemo';
 
 // In your component
-<ThemeDemo />
+<ThemeDemo />;
 ```
 
 ## 🎯 Next Steps

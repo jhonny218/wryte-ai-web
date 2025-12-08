@@ -7,12 +7,14 @@ This document describes the custom theme configuration for the Wryte AI Web appl
 The theme features a **dark-first design** with vibrant accent colors:
 
 ### Main Colors
+
 - **Background**: `#121212` (Deep dark gray)
 - **Foreground**: `#ffffff` (Pure white)
 - **Primary**: `#ff6f00` (Vibrant orange)
 - **Secondary**: `#00d1b2` (Teal/turquoise)
 
 ### Supporting Colors
+
 - **Card**: `#1a1a1a` (Slightly lighter than background)
 - **Muted**: `#2a2a2a` (Subtle background variation)
 - **Destructive**: `#ff5252` (Error red)
@@ -20,7 +22,9 @@ The theme features a **dark-first design** with vibrant accent colors:
 - **Input**: `#2a2a2a` (Input backgrounds)
 
 ### Chart Colors
+
 Variations of the main colors for data visualization:
+
 - Chart 1: `#ff6f00` (Primary orange)
 - Chart 2: `#00d1b2` (Secondary teal)
 - Chart 3: `#ff8f3c` (Light orange)
@@ -30,11 +34,13 @@ Variations of the main colors for data visualization:
 ## Typography
 
 ### Font Families
+
 - **Headings/Titles**: **Raleway** - Bold, modern, geometric sans-serif
 - **Body Text**: **Poppins** - Clean, friendly, highly readable
 - **Accent Text**: **Nunito** - Rounded, soft, approachable
 
 ### Usage
+
 ```tsx
 // Headings (h1-h6) automatically use Raleway
 <h1>This uses Raleway</h1>
@@ -54,14 +60,15 @@ Variations of the main colors for data visualization:
 ## Theme Modes
 
 ### Dark Mode (Default)
+
 The default theme uses a dark background (`#121212`) with bright text and vibrant accent colors.
 
 ### Light Mode
+
 Add the `light` class to switch to light mode:
+
 ```tsx
-<html className="light">
-  {/* Your app */}
-</html>
+<html className="light">{/* Your app */}</html>
 ```
 
 Light mode inverts the background/foreground while maintaining the same primary and secondary colors.
@@ -69,6 +76,7 @@ Light mode inverts the background/foreground while maintaining the same primary 
 ## Using the Theme
 
 ### Color Classes
+
 ```tsx
 // Backgrounds
 <div className="bg-background">        // #121212
@@ -89,6 +97,7 @@ Light mode inverts the background/foreground while maintaining the same primary 
 ```
 
 ### Typography Classes
+
 ```tsx
 <h1 className="font-heading text-4xl font-bold">
   Main Headline
@@ -104,22 +113,20 @@ Light mode inverts the background/foreground while maintaining the same primary 
 ```
 
 ### Complete Button Example
+
 ```tsx
-<button className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-accent font-semibold hover:opacity-90 transition-opacity">
+<button className="rounded-lg bg-primary px-6 py-3 font-accent font-semibold text-primary-foreground transition-opacity hover:opacity-90">
   Click Me
 </button>
 ```
 
 ### Complete Card Example
+
 ```tsx
-<div className="p-6 rounded-lg bg-card border border-border shadow-lg">
-  <h3 className="text-xl font-heading font-semibold text-card-foreground mb-2">
-    Card Title
-  </h3>
-  <p className="font-body text-muted-foreground">
-    Card content goes here.
-  </p>
-  <button className="mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-accent">
+<div className="rounded-lg border border-border bg-card p-6 shadow-lg">
+  <h3 className="mb-2 font-heading text-xl font-semibold text-card-foreground">Card Title</h3>
+  <p className="font-body text-muted-foreground">Card content goes here.</p>
+  <button className="mt-4 rounded-lg bg-primary px-4 py-2 font-accent text-primary-foreground">
     Action
   </button>
 </div>
@@ -128,6 +135,7 @@ Light mode inverts the background/foreground while maintaining the same primary 
 ## Theme Demo
 
 A comprehensive theme demo component is available at `src/components/ThemeDemo.tsx` that showcases:
+
 - All color combinations
 - Typography variants
 - Button styles
@@ -159,6 +167,7 @@ This theme follows these principles:
 ## Dependencies
 
 The theme uses:
+
 - Tailwind CSS v4 with `@tailwindcss/postcss`
 - Google Fonts (Raleway, Poppins, Nunito)
 - `class-variance-authority` for component variants

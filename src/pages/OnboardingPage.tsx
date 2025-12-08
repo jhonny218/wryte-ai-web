@@ -3,5 +3,5 @@ export default function OnboardingPage() {
     <div>
       <h1>Onboarding Page</h1>
     </div>
-  )
+  );
 }

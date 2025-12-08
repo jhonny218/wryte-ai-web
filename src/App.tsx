@@ -1,8 +1,8 @@
-import { BrowserRouter } from 'react-router-dom'
-import AppRoutes from './routes'
-import { ErrorBoundary } from './components/feedback/ErrorBoundary'
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes';
+import { ErrorBoundary } from './components/feedback/ErrorBoundary';
 
-import './App.css'
+import './index.css';
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
         {/* <Toaster /> */}
       </BrowserRouter>
     </ErrorBoundary>
-  )
+  );
 }
 
-export default App
+export default App;
