@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes';
 import { ErrorBoundary } from './components/feedback/ErrorBoundary';
+import { Toaster } from 'sonner'
 
 import './index.css';
 
@@ -9,7 +10,7 @@ function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <AppRoutes />
-        {/* <Toaster /> */}
+        <Toaster />
       </BrowserRouter>
     </ErrorBoundary>
   );
