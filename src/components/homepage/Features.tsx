@@ -1,80 +1,87 @@
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import image from '@/assets/growth.png';
-import image3 from '@/assets/reflecting.png';
-import image4 from '@/assets/looking-ahead.png';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Target, BarChart3, Sparkles } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface FeatureProps {
+  icon: LucideIcon;
   title: string;
   description: string;
-  image: string;
 }
 
 const features: FeatureProps[] = [
   {
-    title: 'Responsive Design',
+    icon: Target,
+    title: 'Brand Voice Matching',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.',
-    image: image4,
+      'AI learns your company\'s unique voice, tone, and style to create content that sounds authentically yours, maintaining consistency across all blogs.',
   },
   {
-    title: 'Intuitive user interface',
+    icon: BarChart3,
+    title: 'Performance Analytics',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.',
-    image: image3,
+      'Track blog performance with built-in analytics. Monitor views, engagement, and SEO rankings to optimize your content strategy over time.',
   },
   {
-    title: 'AI-Powered insights',
+    icon: Sparkles,
+    title: 'Smart SEO Optimization',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi nesciunt est nostrum omnis ab sapiente.',
-    image: image,
+      'Automatically optimize every blog for search engines with keyword integration, meta descriptions, proper headings, and readability improvements.',
   },
 ];
 
 const featureList: string[] = [
-  'Dark/Light theme',
-  'Reviews',
-  'Features',
-  'Pricing',
-  'Contact form',
-  'Our team',
-  'Responsive design',
-  'Newsletter',
-  'Minimalist',
+  'AI-Powered Generation',
+  'SEO Optimized',
+  'Brand Voice Matching',
+  'Calendar Planning',
+  'Team Collaboration',
+  'CMS Integration',
+  'Analytics Dashboard',
+  'Export Options',
+  'Batch Generation',
 ];
 
 export const Features = () => {
   return (
-    <section id="features" className="container space-y-8 py-24 sm:py-32">
-      <h2 className="text-3xl font-bold md:text-center lg:text-4xl">
-        Many{' '}
-        <span className="from-secondary/60 to-secondary bg-linear-to-b bg-clip-text text-transparent">
-          Great Features
-        </span>
-      </h2>
+    <section id="features" className="container space-y-12 py-20">
+      <div className="mx-auto max-w-2xl text-center mb-16">
+        <h2 className="text-3xl font-bold md:text-4xl lg:text-5xl">
+          Powerful{' '}
+          <span className="from-secondary/60 to-secondary bg-linear-to-b bg-clip-text text-transparent">
+            Features
+          </span>
+        </h2>
+        <p className="text-muted-foreground mt-4 text-lg md:text-xl">
+          Everything you need to create, manage, and optimize your company's blog content
+        </p>
+      </div>
 
-      <div className="flex flex-wrap gap-4 md:justify-center">
+      <div className="flex flex-wrap justify-center gap-3">
         {featureList.map((feature: string) => (
-          <div key={feature}>
-            <Badge variant="secondary" className="text-sm">
-              {feature}
-            </Badge>
-          </div>
+          <Badge key={feature} variant="secondary" className="px-4 py-2 text-sm">
+            {feature}
+          </Badge>
         ))}
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {features.map(({ title, description, image }: FeatureProps) => (
-          <Card key={title}>
-            <CardHeader>
-              <CardTitle>{title}</CardTitle>
+        {features.map(({ icon: Icon, title, description }: FeatureProps) => (
+          <Card key={title} className="group relative overflow-hidden border-primary/20 transition-all hover:border-primary/40 hover:shadow-xl">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-secondary/10 to-primary/10 rounded-full blur-3xl transition-all group-hover:scale-150" />
+            
+            <CardHeader className="space-y-4 p-6">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-secondary/20 to-primary/20 transition-all group-hover:scale-110 group-hover:rotate-3">
+                <Icon className="h-7 w-7 text-primary" />
+              </div>
+              <CardTitle className="text-xl">{title}</CardTitle>
             </CardHeader>
 
-            <CardContent>{description}</CardContent>
-
-            <CardFooter>
-              <img src={image} alt="About feature" className="mx-auto w-[200px] lg:w-[300px]" />
-            </CardFooter>
+            <CardContent className="p-6 pt-0">
+              <CardDescription className="text-base leading-relaxed">
+                {description}
+              </CardDescription>
+            </CardContent>
           </Card>
         ))}
       </div>

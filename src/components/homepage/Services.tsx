@@ -32,7 +32,7 @@ const serviceList: ServiceProps[] = [
 
 export const Services = () => {
   return (
-    <section id="services" className="container py-24 sm:py-32">
+    <section id="services" className="container py-20">
       <div className="grid place-items-center gap-8 lg:grid-cols-[1fr_1fr]">
         <div>
           <h2 className="text-3xl font-bold md:text-4xl">

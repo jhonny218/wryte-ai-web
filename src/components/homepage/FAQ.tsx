@@ -13,38 +13,44 @@ interface FAQProps {
 
 const FAQList: FAQProps[] = [
   {
-    question: 'Is this template free?',
-    answer: 'Yes. It is a free ChadcnUI template.',
+    question: 'How does Wryte AI learn my company\'s voice and style?',
+    answer: 'During onboarding, you provide your company information, mission statement, website URL, and preferred tone. Our AI analyzes this data along with your existing content to understand and replicate your unique brand voice, ensuring every blog sounds authentically yours.',
     value: 'item-1',
   },
   {
-    question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit?',
+    question: 'Can I edit the AI-generated content before publishing?',
     answer:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.',
+      'Absolutely! Every step of the process allows for customization. You can edit blog titles, regenerate layouts, modify content directly, add sections, and make any adjustments needed. Wryte AI is designed to work with you, not replace you.',
     value: 'item-2',
   },
   {
-    question: 'Lorem ipsum dolor sit amet  Consectetur natus dolores minus quibusdam?',
+    question: 'What CMS platforms does Wryte AI integrate with?',
     answer:
-      'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore qui nostrum reiciendis veritatis necessitatibus maxime quis ipsa vitae cumque quo?',
+      'Wryte AI supports direct publishing to popular CMS platforms like WordPress, with more integrations coming soon. You can also export your blogs as Word documents or PDFs for manual publishing to any platform.',
     value: 'item-3',
   },
   {
-    question: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit?',
-    answer: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit.',
+    question: 'How does the SEO optimization work?',
+    answer: 'Our AI automatically integrates your primary and secondary keywords throughout the content, generates optimized meta descriptions and tags, structures content with proper H1-H4 headings, and ensures readability scores meet SEO best practices. You can review and adjust all SEO elements before publishing.',
     value: 'item-4',
   },
   {
-    question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur natus?',
+    question: 'Is my company data and content secure?',
     answer:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.',
+      'Yes, security is our top priority. All your data is encrypted both in transit and at rest. Your content is never used to train AI models, and we comply with GDPR and other data protection regulations. You maintain full ownership of all content generated.',
     value: 'item-5',
+  },
+  {
+    question: 'Can multiple team members collaborate on blog creation?',
+    answer:
+      'Yes! Wryte AI includes collaboration features that allow team members to comment, suggest edits, and work together on blog layouts and content. This ensures alignment across your team before publication.',
+    value: 'item-6',
   },
 ];
 
 export const FAQ = () => {
   return (
-    <section id="faq" className="container py-24 sm:py-32">
+    <section id="faq" className="container py-20">
       <h2 className="mb-4 text-3xl font-bold md:text-4xl">
         Frequently Asked{' '}
         <span className="from-secondary/60 to-secondary bg-gradient-to-b bg-clip-text text-transparent">

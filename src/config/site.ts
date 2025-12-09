@@ -5,7 +5,8 @@ export const siteConfig = {
   position: 'Senior Software Engineer',
   description: 'Senior/Staff Software Engineer building performant, accessible products at scale.',
   navItems: [
-    { href: '#about', label: 'About' },
+    { href: '#mission', label: 'Mission' },
+    { href: '#why', label: 'Why' },
     { href: '#howItWorks', label: 'How it Works' },
     { href: '#features', label: 'Features' },
     { href: '#services', label: 'Services' },
