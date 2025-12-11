@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { buttonVariants } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import { LogoIcon } from './Icons';
+import icon from '@/assets/icon.png';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { siteConfig } from '@/config/site';
 
@@ -21,7 +21,7 @@ export const Navbar = () => {
         <NavigationMenuList className="container flex h-14 w-screen justify-between px-4">
           <NavigationMenuItem className="flex font-bold">
             <a rel="noreferrer noopener" href="/" className="ml-2 flex text-xl font-bold">
-              <LogoIcon />
+              <img src={icon} alt="Wryte AI" className="mr-2 h-8 w-8 object-contain" />
               {siteConfig.name}
             </a>
           </NavigationMenuItem>
@@ -62,6 +62,24 @@ export const Navbar = () => {
                     <GitHubLogoIcon className="mr-2 h-5 w-5" />
                     Github
                   </a>
+                  {/* Mobile sign-in / user controls */}
+                  <SignedOut>
+                    <div className="w-full flex items-center justify-center">
+                      <SignInButton mode="modal">
+                        <button
+                          onClick={() => setIsOpen(false)}
+                          className={buttonVariants({ variant: 'default' })}
+                        >
+                          Sign In
+                        </button>
+                      </SignInButton>
+                    </div>
+                  </SignedOut>
+                  <SignedIn>
+                    <div className="w-full flex items-center justify-center">
+                      <UserButton />
+                    </div>
+                  </SignedIn>
                 </nav>
               </SheetContent>
             </Sheet>
