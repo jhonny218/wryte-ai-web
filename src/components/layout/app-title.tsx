@@ -8,6 +8,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Button } from '../ui/button'
+import { siteConfig } from '@/config/site'
 
 export function AppTitle() {
   const { setOpenMobile } = useSidebar()
@@ -27,7 +28,7 @@ export function AppTitle() {
               onClick={() => setOpenMobile(false)}
               className='grid flex-1 text-start text-sm leading-tight'
             >
-              <span className='truncate font-bold'>Wryte AI</span>
+              <span className='truncate font-bold'>{siteConfig.name}</span>
               {slug ? <span className='truncate text-xs'>{slug}</span> : null}
             </Link>
             <ToggleSidebar />
