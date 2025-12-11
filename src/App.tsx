@@ -1,7 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes';
 import { ErrorBoundary } from './components/feedback/ErrorBoundary';
-import { Toaster } from 'sonner'
+import Toaster from './components/feedback/Toast';
 
 import './index.css';
 

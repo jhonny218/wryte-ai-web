@@ -18,18 +18,16 @@ export const Hero = () => {
         <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
           {/* Left side - Logo */}
           <div className="flex w-full flex-1 items-center justify-center lg:justify-start">
-            <div className="group relative">
-              {/* Glow effect behind logo */}
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-secondary/30 to-primary/30 opacity-75 blur-2xl transition-all duration-500 group-hover:opacity-100 group-hover:blur-3xl" />
-              
-              {/* Logo container */}
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-background/80 to-background/60 p-8 backdrop-blur-sm ring-1 ring-white/10 transition-all duration-500 group-hover:scale-105 group-hover:ring-white/20">
-                <img
-                  src={logo}
-                  alt="Wryte AI Logo"
-                  className="h-auto w-64 md:w-80 lg:w-96"
-                />
-              </div>
+            <div className="group relative flex items-center justify-center">
+              {/* Glow effect behind logo (kept for subtle emphasis) */}
+              <div className="absolute -inset-6 rounded-full bg-gradient-to-r from-secondary/30 to-primary/30 opacity-60 blur-3xl transition-all duration-500 group-hover:opacity-100" />
+
+              {/* Plain larger logo (no frame) */}
+              <img
+                src={logo}
+                alt="Wryte AI Logo"
+                className="relative h-auto w-[360px] sm:w-[520px] md:w-[720px] lg:w-[980px] object-contain"
+              />
             </div>
           </div>
 

@@ -1,13 +1,15 @@
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 import { RootLayout } from '../layouts/RootLayout';
 import { WryteLayout } from '../layouts/WryteLayout';
+import ProtectedRoute from './ProtectedRoute';
+import ROUTES from './routes';
 
 // Pages
-import HomePage from '../pages/HomePage';
-import OnboardingPage from '../pages/OnboardingPage';
-import NotFoundPage from '../pages/NotFoundPage';
-import DashboardPage from '@/components/wryte/DashboardPage';
+import HomePage from '@/pages/HomePage';
+import OnboardingPage from '@/pages/OnboardingPage';
+import NotFoundPage from '@/pages/NotFoundPage';
+import DashboardPage from '@/pages/DashboardPage';
 
 export default function AppRoutes() {
   return (
@@ -16,18 +18,18 @@ export default function AppRoutes() {
       <Route path="/" element={<RootLayout />}>
         <Route
           index
-          element={
-            <>
-              <SignedOut>
-                <HomePage />
-              </SignedOut>
-              <SignedIn>
-                {/* Check if user has org, if not -> onboarding, else -> dashboard */}
-                {/* <Navigate to="/onboarding" replace /> */}
-                <Navigate to="/org/hello" replace />
-              </SignedIn>
-            </>
-          }
+            element={
+              <>
+                <SignedOut>
+                  <HomePage />
+                </SignedOut>
+                <SignedIn>
+                  {/* Check if user has org, if not -> onboarding, else -> dashboard */}
+                  {/* <Navigate to={ROUTES.ONBOARDING} replace /> */}
+                  <Navigate to={`${ROUTES.ORG_INDEX}/hello`} replace />
+                </SignedIn>
+              </>
+            }
         />
       </Route>
 
@@ -37,7 +39,7 @@ export default function AppRoutes() {
         <Route path="/onboarding" element={<OnboardingPage />} />
 
         {/* Org Dashboard (Slug-based routing) */}
-        <Route path="/org/:slug" element={<WryteLayout />}>
+        <Route path={ROUTES.ORG} element={<WryteLayout />}>
           <Route index element={<DashboardPage />} />
           
           {/* <Route path="settings" element={<SettingsPage />} />
@@ -55,18 +57,5 @@ export default function AppRoutes() {
       {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
-  );
-}
-
-function ProtectedRoute() {
-  return (
-    <>
-      <SignedIn>
-        <Outlet />
-      </SignedIn>
-      <SignedOut>
-        <Navigate to="/sign-in" replace />
-      </SignedOut>
-    </>
   );
 }
