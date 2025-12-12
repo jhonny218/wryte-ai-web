@@ -16,7 +16,7 @@ import { siteConfig } from '@/config/site';
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
-    <header className="dark:bg-background sticky top-0 z-40 w-full border-b bg-white dark:border-b-slate-700">
+    <header className="bg-background sticky top-0 z-40 w-full border-b dark:border-b-slate-700">
       <NavigationMenu className="mx-auto">
         <NavigationMenuList className="container flex h-14 w-screen justify-between px-4">
           <NavigationMenuItem className="flex font-bold">
