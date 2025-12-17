@@ -1,8 +1,9 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 import { RootLayout } from '../layouts/RootLayout';
 import { WryteLayout } from '../layouts/WryteLayout';
 import ProtectedRoute from './ProtectedRoute';
+import { AuthenticatedRoot } from './AuthenticatedRoot';
 import ROUTES from './routes';
 
 // Pages
@@ -18,18 +19,16 @@ export default function AppRoutes() {
       <Route path="/" element={<RootLayout />}>
         <Route
           index
-            element={
-              <>
-                <SignedOut>
-                  <HomePage />
-                </SignedOut>
-                <SignedIn>
-                  {/* Check if user has org, if not -> onboarding, else -> dashboard */}
-                  {/* <Navigate to={ROUTES.ONBOARDING} replace /> */}
-                  <Navigate to={`${ROUTES.ORG_INDEX}/hello`} replace />
-                </SignedIn>
-              </>
-            }
+          element={
+            <>
+              <SignedOut>
+                <HomePage />
+              </SignedOut>
+              <SignedIn>
+                <AuthenticatedRoot />
+              </SignedIn>
+            </>
+          }
         />
       </Route>
 
@@ -41,7 +40,7 @@ export default function AppRoutes() {
         {/* Org Dashboard (Slug-based routing) */}
         <Route path={ROUTES.ORG} element={<WryteLayout />}>
           <Route index element={<DashboardPage />} />
-          
+
           {/* <Route path="settings" element={<SettingsPage />} />
           
           <Route path="titles" element={<TitleGenerationPage />} />

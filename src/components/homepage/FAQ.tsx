@@ -13,8 +13,9 @@ interface FAQProps {
 
 const FAQList: FAQProps[] = [
   {
-    question: 'How does Wryte AI learn my company\'s voice and style?',
-    answer: 'During onboarding, you provide your company information, mission statement, website URL, and preferred tone. Our AI analyzes this data along with your existing content to understand and replicate your unique brand voice, ensuring every blog sounds authentically yours.',
+    question: "How does Wryte AI learn my company's voice and style?",
+    answer:
+      'During onboarding, you provide your company information, mission statement, website URL, and preferred tone. Our AI analyzes this data along with your existing content to understand and replicate your unique brand voice, ensuring every blog sounds authentically yours.',
     value: 'item-1',
   },
   {
@@ -31,7 +32,8 @@ const FAQList: FAQProps[] = [
   },
   {
     question: 'How does the SEO optimization work?',
-    answer: 'Our AI automatically integrates your primary and secondary keywords throughout the content, generates optimized meta descriptions and tags, structures content with proper H1-H4 headings, and ensures readability scores meet SEO best practices. You can review and adjust all SEO elements before publishing.',
+    answer:
+      'Our AI automatically integrates your primary and secondary keywords throughout the content, generates optimized meta descriptions and tags, structures content with proper H1-H4 headings, and ensures readability scores meet SEO best practices. You can review and adjust all SEO elements before publishing.',
     value: 'item-4',
   },
   {

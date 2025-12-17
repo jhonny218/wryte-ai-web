@@ -1,6 +1,6 @@
-import { toast as sonnerToast } from 'sonner'
+import { toast as sonnerToast } from 'sonner';
 
-type ToastMessage = string | React.ReactNode
+type ToastMessage = string | React.ReactNode;
 
 const toast = {
   success: (message: ToastMessage) => sonnerToast.success(message),
@@ -9,10 +9,10 @@ const toast = {
   warning: (message: ToastMessage) => sonnerToast(message),
   raw: (message: ToastMessage) => sonnerToast(message),
   loading: (message: ToastMessage) => sonnerToast.loading(message),
-}
+};
 
 export default function useToast() {
-  return { toast, sonnerToast }
+  return { toast, sonnerToast };
 }
 
-export { toast, sonnerToast }
+export { toast, sonnerToast };

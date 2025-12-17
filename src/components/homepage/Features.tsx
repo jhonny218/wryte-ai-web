@@ -14,7 +14,7 @@ const features: FeatureProps[] = [
     icon: Target,
     title: 'Brand Voice Matching',
     description:
-      'AI learns your company\'s unique voice, tone, and style to create content that sounds authentically yours, maintaining consistency across all blogs.',
+      "AI learns your company's unique voice, tone, and style to create content that sounds authentically yours, maintaining consistency across all blogs.",
   },
   {
     icon: BarChart3,
@@ -45,7 +45,7 @@ const featureList: string[] = [
 export const Features = () => {
   return (
     <section id="features" className="container space-y-12 py-20">
-      <div className="mx-auto max-w-2xl text-center mb-16">
+      <div className="mx-auto mb-16 max-w-2xl text-center">
         <h2 className="text-3xl font-bold md:text-4xl lg:text-5xl">
           Powerful{' '}
           <span className="from-secondary/60 to-secondary bg-linear-to-b bg-clip-text text-transparent">
@@ -67,20 +67,21 @@ export const Features = () => {
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {features.map(({ icon: Icon, title, description }: FeatureProps) => (
-          <Card key={title} className="group relative overflow-hidden border-primary/20 transition-all hover:border-primary/40 hover:shadow-xl">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-secondary/10 to-primary/10 rounded-full blur-3xl transition-all group-hover:scale-150" />
-            
+          <Card
+            key={title}
+            className="group border-primary/20 hover:border-primary/40 relative overflow-hidden transition-all hover:shadow-xl"
+          >
+            <div className="from-secondary/10 to-primary/10 absolute top-0 right-0 h-40 w-40 rounded-full bg-gradient-to-br blur-3xl transition-all group-hover:scale-150" />
+
             <CardHeader className="space-y-4 p-6">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-secondary/20 to-primary/20 transition-all group-hover:scale-110 group-hover:rotate-3">
-                <Icon className="h-7 w-7 text-primary" />
+              <div className="from-secondary/20 to-primary/20 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br transition-all group-hover:scale-110 group-hover:rotate-3">
+                <Icon className="text-primary h-7 w-7" />
               </div>
               <CardTitle className="text-xl">{title}</CardTitle>
             </CardHeader>
 
             <CardContent className="p-6 pt-0">
-              <CardDescription className="text-base leading-relaxed">
-                {description}
-              </CardDescription>
+              <CardDescription className="text-base leading-relaxed">{description}</CardDescription>
             </CardContent>
           </Card>
         ))}

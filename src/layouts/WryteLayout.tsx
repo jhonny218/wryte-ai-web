@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { Outlet } from 'react-router-dom';
 
 export function WryteLayout() {
-  const defaultOpen = getCookie('sidebar_state') !== 'false'
+  const defaultOpen = getCookie('sidebar_state') !== 'false';
   return (
     <LayoutProvider>
       <SidebarProvider defaultOpen={defaultOpen}>

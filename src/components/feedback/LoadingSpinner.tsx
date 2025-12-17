@@ -1,23 +1,20 @@
-import React from 'react'
+import React from 'react';
 
 interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg'
-  className?: string
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
 }
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-  size = 'md',
-  className = '',
-}) => {
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 'md', className = '' }) => {
   const sizes: Record<string, string> = {
     sm: 'h-4 w-4',
     md: 'h-6 w-6',
     lg: 'h-10 w-10',
-  }
+  };
 
   return (
     <svg
-      className={`${sizes[size]} animate-spin text-primary ${className}`}
+      className={`${sizes[size]} text-primary animate-spin ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -37,7 +34,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
       ></path>
     </svg>
-  )
-}
+  );
+};
 
-export default LoadingSpinner
+export default LoadingSpinner;

@@ -5,8 +5,8 @@ export const ROUTES = {
   ONBOARDING: '/onboarding',
   ORG_INDEX: '/org',
   ORG: '/org/:slug',
-} as const
+} as const;
 
-export type RouteKey = keyof typeof ROUTES
+export type RouteKey = keyof typeof ROUTES;
 
-export default ROUTES
+export default ROUTES;

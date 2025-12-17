@@ -1,10 +1,10 @@
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react'
-import { MobileUserButton } from './mobile-user-button'
-import { useIsMobile } from '@/hooks/useIsMobile'
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
+import { MobileUserButton } from './mobile-user-button';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export function NavUser() {
-  const { user } = useUser()
-  const isMobile = useIsMobile()
+  const { user } = useUser();
+  const isMobile = useIsMobile();
 
   return (
     <div className="w-full px-2">
@@ -21,20 +21,20 @@ export function NavUser() {
           <MobileUserButton />
         ) : (
           <div className="flex items-center gap-3">
-            <UserButton 
+            <UserButton
               userProfileMode="modal"
               appearance={{
                 elements: {
-                  userButtonPopoverCard: "z-[9999]",
-                  userButtonPopoverActionButton: "hover:bg-accent",
-                }
+                  userButtonPopoverCard: 'z-[9999]',
+                  userButtonPopoverActionButton: 'hover:bg-accent',
+                },
               }}
             />
             <div className="min-w-0">
               <div className="truncate text-sm font-medium">
                 {user?.fullName || user?.firstName || 'Account'}
               </div>
-              <div className="truncate text-xs text-muted-foreground">
+              <div className="text-muted-foreground truncate text-xs">
                 {user?.primaryEmailAddress?.emailAddress}
               </div>
             </div>
@@ -42,5 +42,5 @@ export function NavUser() {
         )}
       </SignedIn>
     </div>
-  )
+  );
 }

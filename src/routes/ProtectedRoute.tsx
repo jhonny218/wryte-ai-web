@@ -1,6 +1,6 @@
-import { Outlet, Navigate } from 'react-router-dom'
-import { SignedIn, SignedOut } from '@clerk/clerk-react'
-import ROUTES from './routes'
+import { Outlet, Navigate } from 'react-router-dom';
+import { SignedIn, SignedOut } from '@clerk/clerk-react';
+import ROUTES from './routes';
 
 export default function ProtectedRoute() {
   return (
@@ -12,5 +12,5 @@ export default function ProtectedRoute() {
         <Navigate to={ROUTES.SIGN_IN} replace />
       </SignedOut>
     </>
-  )
+  );
 }

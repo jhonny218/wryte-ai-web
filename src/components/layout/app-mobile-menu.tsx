@@ -11,18 +11,13 @@ export function AppMobileMenu() {
 
   return (
     <header className="flex h-14 items-center gap-4 border-b px-4 lg:hidden">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={toggleSidebar}
-        className="shrink-0"
-      >
+      <Button variant="ghost" size="icon" onClick={toggleSidebar} className="shrink-0">
         <Menu className="h-5 w-5" />
         <span className="sr-only">Toggle Sidebar</span>
       </Button>
       <div className="flex-1">
-        <div className="font-bold text-sm">{siteConfig.name}</div>
-        {slug && <div className="text-xs text-muted-foreground">{slug}</div>}
+        <div className="text-sm font-bold">{siteConfig.name}</div>
+        {slug && <div className="text-muted-foreground text-xs">{slug}</div>}
       </div>
     </header>
   );

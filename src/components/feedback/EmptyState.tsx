@@ -1,16 +1,16 @@
-import React from 'react'
-import { Button } from '@/components/ui/button'
-import type { LucideIcon } from 'lucide-react'
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import type { LucideIcon } from 'lucide-react';
 
 interface EmptyStateProps {
-  title?: string
-  description?: string
-  icon?: LucideIcon
+  title?: string;
+  description?: string;
+  icon?: LucideIcon;
   action?: {
-    label: string
-    onClick: () => void
-    variant?: 'default' | 'outline' | 'secondary'
-  }
+    label: string;
+    onClick: () => void;
+    variant?: 'default' | 'outline' | 'secondary';
+  };
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
@@ -22,13 +22,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4 py-12">
       {Icon ? (
-        <Icon className="h-12 w-12 text-muted-foreground" />
+        <Icon className="text-muted-foreground h-12 w-12" />
       ) : (
-        <div className="h-12 w-12 rounded-full bg-muted/30" />
+        <div className="bg-muted/30 h-12 w-12 rounded-full" />
       )}
 
       <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="text-center text-sm text-muted-foreground max-w-[36rem]">{description}</p>
+      <p className="text-muted-foreground max-w-[36rem] text-center text-sm">{description}</p>
 
       {action && (
         <Button onClick={action.onClick} variant={action.variant ?? 'default'}>
@@ -36,7 +36,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         </Button>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default EmptyState
+export default EmptyState;

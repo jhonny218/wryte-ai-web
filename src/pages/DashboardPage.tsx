@@ -4,7 +4,7 @@ import { Plus, FileText, BarChart3, Calendar } from 'lucide-react';
 
 export default function DashboardPage() {
   return (
-    <div className="container py-10 space-y-8">
+    <div className="container space-y-8 py-10">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
@@ -19,31 +19,31 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Content</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+            <FileText className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">+2 from last month</p>
+            <p className="text-muted-foreground text-xs">+2 from last month</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Scheduled</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">Next post tomorrow</p>
+            <p className="text-muted-foreground text-xs">Next post tomorrow</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <BarChart3 className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1,234</div>
-            <p className="text-xs text-muted-foreground">+15% from last month</p>
+            <p className="text-muted-foreground text-xs">+15% from last month</p>
           </CardContent>
         </Card>
       </div>
@@ -54,9 +54,7 @@ export default function DashboardPage() {
             <CardTitle>Recent Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
-              No recent activity to display.
-            </p>
+            <p className="text-muted-foreground text-sm">No recent activity to display.</p>
           </CardContent>
         </Card>
         <Card className="col-span-3">

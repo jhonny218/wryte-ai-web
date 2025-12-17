@@ -64,7 +64,7 @@ export const Navbar = () => {
                   </a>
                   {/* Mobile sign-in / user controls */}
                   <SignedOut>
-                    <div className="w-full flex items-center justify-center">
+                    <div className="flex w-full items-center justify-center">
                       <SignInButton mode="modal">
                         <button
                           onClick={() => setIsOpen(false)}
@@ -76,7 +76,7 @@ export const Navbar = () => {
                     </div>
                   </SignedOut>
                   <SignedIn>
-                    <div className="w-full flex items-center justify-center">
+                    <div className="flex w-full items-center justify-center">
                       <UserButton />
                     </div>
                   </SignedIn>

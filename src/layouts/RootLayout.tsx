@@ -15,16 +15,16 @@ export function RootLayout() {
         <span className="text-sm md:text-base">
           © {new Date().getFullYear()} {siteConfig.name}. Made with 🧠 and{' '}
         </span>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="ml-1 cursor-help text-sm underline decoration-dotted md:text-base">
-                code.
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              Built with React, TypeScript, Vite, Tailwind CSS & shadcn/ui
-            </TooltipContent>
-          </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="ml-1 cursor-help text-sm underline decoration-dotted md:text-base">
+              code.
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top">
+            Built with React, TypeScript, Vite, Tailwind CSS & shadcn/ui
+          </TooltipContent>
+        </Tooltip>
       </footer>
     </div>
   );

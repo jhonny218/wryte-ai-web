@@ -21,8 +21,8 @@ import {
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
-} from 'lucide-react'
-import type { SidebarData } from '../types.ts'
+} from 'lucide-react';
+import type { SidebarData } from '../types.ts';
 
 export const sidebarData: SidebarData = {
   user: {
@@ -183,4 +183,4 @@ export const sidebarData: SidebarData = {
       ],
     },
   ],
-}
+};
