@@ -1,15 +1,18 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, FileText, BarChart3, Calendar } from 'lucide-react';
+import { SectionTitle } from '@/components/layout/section-title';
 
 export default function DashboardPage() {
   return (
     <div className="container space-y-8 py-10">
+
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back to your workspace.</p>
-        </div>
+        <SectionTitle
+          title="Dashboard"
+          subtitle="Welcome back to your workspace."
+        />
         <Button>
           <Plus className="mr-2 h-4 w-4" /> Create New
         </Button>

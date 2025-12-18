@@ -7,6 +7,40 @@ Complete list of all available API endpoints for Wryte AI.
 
 ---
 
+## Quick Reference - All Available Routes
+
+### Health
+
+- `GET /health` - Check API health status
+
+### Users
+
+- `GET /api/v1/users/me` - Get current user
+- `GET /api/v1/users/:id` - Get user by ID
+- `POST /api/v1/users` - Create user
+- `PUT /api/v1/users/me` - Update current user
+- `DELETE /api/v1/users/me` - Delete current user
+- `GET /api/v1/users/me/organizations` - Get user's organizations
+
+### Organizations
+
+- `GET /api/v1/organizations` - Get all user's organizations
+- `POST /api/v1/organizations` - Create organization (with optional settings)
+- `GET /api/v1/organizations/:orgId` - Get organization by ID
+- `GET /api/v1/organizations/slug/:slug` - Get organization by slug
+- `PUT /api/v1/organizations/:orgId` - Update organization
+
+### Content Settings
+
+- `GET /api/v1/settings/:organizationId` - Get content settings
+- `PUT /api/v1/settings/:organizationId` - Update/create content settings
+
+### Webhooks
+
+- `POST /api/v1/webhooks/clerk` - Clerk user lifecycle webhook (internal)
+
+---
+
 ## Table of Contents
 
 - [Authentication](#authentication)

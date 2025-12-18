@@ -1,5 +1,11 @@
 import { apiClient } from "@/lib/api-client";
-import type { Organization, UserOrganizationsData } from "../types/organization.type";
+import type { Organization, UserOrganizationsData } from "../types/organization.types";
+
+// - `GET /api/v1/organizations` - Get all user's organizations
+// - `POST /api/v1/organizations` - Create organization (with optional settings)
+// - `GET /api/v1/organizations/:orgId` - Get organization by ID
+// - `GET /api/v1/organizations/slug/:slug` - Get organization by slug
+// - `PUT /api/v1/organizations/:orgId` - Update organization
 
 export const organizationsApi = {
   // Get all organizations for current user

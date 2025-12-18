@@ -13,4 +13,4 @@ export type {
   Organization,
   ContentSettings,
   UserOrganizationsData,
-} from './types/organization.type';
+} from './types/organization.types';

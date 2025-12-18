@@ -9,6 +9,8 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '../ui/button';
 import { siteConfig } from '@/config/site';
+import appIcon from '@/assets/icon.png';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 export function AppTitle() {
   const { setOpenMobile } = useSidebar();
@@ -26,10 +28,15 @@ export function AppTitle() {
             <Link
               to={`/org/${slug}`}
               onClick={() => setOpenMobile(false)}
-              className="grid flex-1 text-start text-sm leading-tight"
+              className="flex items-center gap-2 flex-1 text-start text-sm leading-tight"
             >
-              <span className="truncate font-bold">{siteConfig.name}</span>
-              {slug ? <span className="truncate text-xs">{slug}</span> : null}
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={appIcon} alt="App Icon" />
+                </Avatar>
+              <div className="grid">
+                <span className="truncate font-bold text-secondary">{siteConfig.name}</span>
+                {slug ? <span className="truncate text-xs">{slug}</span> : null}
+              </div>
             </Link>
             <ToggleSidebar />
           </div>

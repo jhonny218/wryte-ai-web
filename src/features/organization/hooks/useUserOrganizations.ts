@@ -1,7 +1,7 @@
 import { useAuth } from '@clerk/clerk-react';
 import { useQuery } from '@tanstack/react-query';
 import { organizationsApi } from '../api/organizations.api';
-import type { UserOrganizationsData } from '../types/organization.type';
+import type { UserOrganizationsData } from '../types/organization.types';
 
 export const useUserOrganizations = () => {
   const { userId } = useAuth();
