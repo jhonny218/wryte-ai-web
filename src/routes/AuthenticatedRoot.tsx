@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import ROUTES from './routes';
 import { LoadingSpinner } from '@/components/feedback/LoadingSpinner';
 import { useAuth } from '@clerk/clerk-react';
-import { useUserOrganizations } from '@/features/organization/hooks/useUserOrganizations';
+import { useUserOrganizations } from '@/features/organization';
 
 export function AuthenticatedRoot() {
   const { isSignedIn, isLoaded } = useAuth();

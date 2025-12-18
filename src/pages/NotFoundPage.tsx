@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { getOrgRoute } from '@/routes/routes';
-import { useCurrentOrganization } from '@/features/organization/hooks/useCurrentOrganization';
+import { useCurrentOrganization } from '@/features/organization';
 
 export default function NotFoundPage() {
   const navigate = useNavigate();

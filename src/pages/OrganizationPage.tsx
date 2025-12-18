@@ -1,6 +1,5 @@
-import { OrganizationForm } from '@/features/organization/components/OrganizationForm';
+import { OrganizationForm, useCurrentOrganization } from '@/features/organization';
 import { LoadingSpinner } from '@/components/feedback/LoadingSpinner';
-import { useCurrentOrganization } from '@/features/organization/hooks/useCurrentOrganization';
 import { SectionTitle } from '@/components/layout/section-title';
 
 export default function OrganizationPage() {
