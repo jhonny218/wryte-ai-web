@@ -11,6 +11,7 @@ import HomePage from '@/pages/HomePage';
 import OnboardingPage from '@/pages/OnboardingPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import DashboardPage from '@/pages/DashboardPage';
+import OrganizationPage from '@/pages/OrganizationPage';
 
 export default function AppRoutes() {
   return (
@@ -40,16 +41,14 @@ export default function AppRoutes() {
         {/* Org Dashboard (Slug-based routing) */}
         <Route path={ROUTES.ORG} element={<WryteLayout />}>
           <Route index element={<DashboardPage />} />
-
-          {/* <Route path="settings" element={<SettingsPage />} />
-          
-          <Route path="titles" element={<TitleGenerationPage />} />
-          
-          <Route path="calendar" element={<CalendarPage />} />
-          
-          <Route path="titles/:titleId/outline" element={<OutlineEditorPage />} />
-          
-          <Route path="outlines/:outlineId/blog" element={<BlogEditorPage />} /> */}
+          <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+          <Route path={ROUTES.CALENDAR} element={<div>Calendar Page</div>} />
+          <Route path={ROUTES.TITLES} element={<div>Titles Page</div>} />
+          <Route path={ROUTES.OUTLINES} element={<div>Outlines Page</div>} />
+          <Route path={ROUTES.BLOGS} element={<div>Blogs Page</div>} />
+          <Route path={ROUTES.CONTENT_STRATEGY} element={<div>Content Strategy Page</div>} />
+          <Route path={ROUTES.ORGANIZATION} element={<OrganizationPage />} />
+          <Route path={ROUTES.HELP_CENTER} element={<div>Help Center Page</div>} />
         </Route>
       </Route>
 

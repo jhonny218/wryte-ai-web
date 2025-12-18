@@ -11,6 +11,7 @@ import {
 } from '@/lib/validations/organization';
 import { OrganizationInfoForm } from './OrganizationInfoForm';
 import { ContentSettingsForm } from './ContentSettingsForm';
+import { toast } from '@/hooks/useToast';
 
 export function OnboardingWizard() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -45,7 +46,6 @@ export function OnboardingWizard() {
       return response.data;
     },
     onSuccess: async (response) => {
-      console.log('Organization created successfully:', response);
       const orgData = response.data || response;
       const slug = orgData.slug;
 
@@ -53,15 +53,16 @@ export function OnboardingWizard() {
       await queryClient.invalidateQueries({ queryKey: ['userOrganizations'] });
 
       if (slug) {
+        toast.success('Organization created successfully!');
         navigate(`/org/${slug}`, { replace: true });
       } else {
-        console.error('No slug in response:', response);
+        toast.error('Organization created but no slug received. Please contact support.');
       }
     },
     onError: (error: unknown) => {
-      console.error('Failed to create organization:', error);
       const err = error as { response?: { data?: { message?: string } } };
-      alert(err.response?.data?.message || 'Failed to create organization. Please try again.');
+      const errorMessage = err.response?.data?.message || 'Failed to create organization. Please try again.';
+      toast.error(errorMessage);
     },
   });
 

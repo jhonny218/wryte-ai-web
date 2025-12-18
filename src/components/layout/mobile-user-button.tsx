@@ -2,6 +2,7 @@ import { useUser, useClerk } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/useToast';
 
 export function MobileUserButton() {
   const { user } = useUser();
@@ -13,7 +14,8 @@ export function MobileUserButton() {
       await signOut();
       navigate('/', { replace: true });
     } catch (error) {
-      console.error('Sign out error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to sign out. Please try again.';
+      toast.error(errorMessage);
       navigate('/', { replace: true });
     }
   };
