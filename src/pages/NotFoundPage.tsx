@@ -1,18 +1,18 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { useUserOrganization } from '@/hooks/useUserOrganization';
 import { getOrgRoute } from '@/routes/routes';
+import { useCurrentOrganization } from '@/features/organization/hooks/useCurrentOrganization';
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data: orgData } = useUserOrganization();
+  const { data: orgData } = useCurrentOrganization();
 
   // Check if we're in an org context by looking at the URL
   const isInOrgContext = location.pathname.startsWith('/org/');
   
   // Get the primary organization slug
-  const primaryOrgSlug = orgData?.primaryOrganization?.slug;
+  const primaryOrgSlug = orgData?.slug;
 
   const handleBackToHome = () => {
     // If in org context and has a primary org, go to org dashboard

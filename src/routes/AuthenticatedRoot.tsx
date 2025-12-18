@@ -1,12 +1,12 @@
 import { Navigate } from 'react-router-dom';
 import ROUTES from './routes';
 import { LoadingSpinner } from '@/components/feedback/LoadingSpinner';
-import { useUserOrganization } from '@/hooks/useUserOrganization';
 import { useAuth } from '@clerk/clerk-react';
+import { useUserOrganizations } from '@/features/organization/hooks/useUserOrganizations';
 
 export function AuthenticatedRoot() {
   const { isSignedIn, isLoaded } = useAuth();
-  const { data: orgData, isLoading: orgLoading, isError } = useUserOrganization();
+  const { data: orgData, isLoading: orgLoading, isError } = useUserOrganizations();
 
   // Wait for organization data to load
   if (!isLoaded || orgLoading) {
