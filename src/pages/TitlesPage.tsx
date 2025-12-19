@@ -1,10 +1,31 @@
+import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import { SectionTitle } from '@/components/layout/section-title';
+import { useCurrentOrganization } from '@/features/organization';
+import { TitleActions } from '@/features/titles';
 
 export default function TitlesPage() {
+  const { data: organization, isLoading: isLoadingOrg } = useCurrentOrganization();
+  
+  if (isLoadingOrg) {
+    return (
+      <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+    
+  if (!organization) {
+    return (
+      <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <SectionTitle title="Titles" subtitle="Generate and manage content titles." />
-      <div className="mt-8 text-muted-foreground text-center">Titles feature coming soon.</div>
+      <TitleActions organizationId={organization.id} />
     </div>
   );
 }
