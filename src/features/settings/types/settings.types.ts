@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 // Enums
-export const ContentFrequency = z.enum(['DAILY', 'WEEKLY', 'BIWEEKLY', 'MONTHLY']);
-export const PlanningPeriod = z.enum(['WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY']);
+export const postingDayEnum = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']);
 export const ContentTone = z.enum(['professional', 'casual', 'friendly', 'formal', 'witty', 'educational']);
 export const PreferredLength = z.enum(['SHORT_FORM', 'MEDIUM_FORM', 'LONG_FORM']);
 
@@ -12,8 +11,7 @@ export const contentSettingsSchema = z.object({
   organizationId: z.string(),
   primaryKeywords: z.array(z.string()).min(1, 'At least one primary keyword is required').max(10, 'Maximum 10 primary keywords'),
   secondaryKeywords: z.array(z.string()).max(20, 'Maximum 20 secondary keywords').optional().default([]),
-  frequency: ContentFrequency.optional(),
-  planningPeriod: PlanningPeriod.optional(),
+  postingDaysOfWeek: z.array(postingDayEnum).min(1, 'Select at least one posting day').max(7, 'Maximum 7 days'),
   tone: ContentTone.optional(),
   targetAudience: z.string().max(200, 'Target audience must be 200 characters or less').optional(),
   industry: z.string().max(100, 'Industry must be 100 characters or less').optional(),
@@ -29,8 +27,7 @@ export const contentSettingsSchema = z.object({
 export const contentSettingsFormSchema = z.object({
   primaryKeywords: z.array(z.string()).min(1, 'At least one primary keyword is required').max(10, 'Maximum 10 primary keywords').optional(),
   secondaryKeywords: z.array(z.string()).max(20, 'Maximum 20 secondary keywords').optional(),
-  frequency: ContentFrequency.optional(),
-  planningPeriod: PlanningPeriod.optional(),
+  postingDaysOfWeek: z.array(postingDayEnum).min(1, 'Select at least one posting day').max(7, 'Maximum 7 days').optional(),
   tone: ContentTone.optional(),
   targetAudience: z.string().max(200, 'Target audience must be 200 characters or less').optional(),
   industry: z.string().max(100, 'Industry must be 100 characters or less').optional(),
@@ -43,7 +40,5 @@ export const contentSettingsFormSchema = z.object({
 // TypeScript Types
 export type ContentSettings = z.infer<typeof contentSettingsSchema>;
 export type ContentSettingsFormData = z.infer<typeof contentSettingsFormSchema>;
-export type ContentFrequencyType = z.infer<typeof ContentFrequency>;
-export type PlanningPeriodType = z.infer<typeof PlanningPeriod>;
 export type ContentToneType = z.infer<typeof ContentTone>;
 export type PreferredLengthType = z.infer<typeof PreferredLength>;

@@ -5,10 +5,11 @@ export const organizationSchema = z.object({
   name: z.string().min(1, 'Organization name is required').max(100, 'Name is too long'),
   mission: z.string().min(1, 'Mission statement is required').max(500, 'Mission is too long'),
   description: z.string().max(1000, 'Description is too long').optional().or(z.literal('')),
-  websiteUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  websiteUrl: z.url('Must be a valid URL').optional().or(z.literal('')),
 });
 
 // Step 2: Content Settings Schema
+export const postingDayEnum = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']);
 export const contentSettingsSchema = z.object({
   // Strategy
   primaryKeywords: z
@@ -16,8 +17,7 @@ export const contentSettingsSchema = z.object({
     .min(1, 'At least one keyword is required')
     .max(10, 'Maximum 10 keywords allowed'),
   secondaryKeywords: z.array(z.string()).max(20, 'Maximum 20 keywords allowed'),
-  frequency: z.string().optional().or(z.literal('')),
-  planningPeriod: z.string().optional().or(z.literal('')),
+  postingDaysOfWeek: z.array(postingDayEnum).min(1, 'Select at least one posting day').max(7, 'Maximum 7 days'),
 
   // Style & Audience
   tone: z.string().optional().or(z.literal('')),
@@ -39,8 +39,7 @@ export const onboardingSchema = z.object({
   websiteUrl: organizationSchema.shape.websiteUrl,
   primaryKeywords: contentSettingsSchema.shape.primaryKeywords,
   secondaryKeywords: contentSettingsSchema.shape.secondaryKeywords,
-  frequency: contentSettingsSchema.shape.frequency,
-  planningPeriod: contentSettingsSchema.shape.planningPeriod,
+  postingDaysOfWeek: contentSettingsSchema.shape.postingDaysOfWeek,
   tone: contentSettingsSchema.shape.tone,
   targetAudience: contentSettingsSchema.shape.targetAudience,
   industry: contentSettingsSchema.shape.industry,

@@ -11,8 +11,6 @@ export { useContentSettings } from './hooks/useContentSettings';
 export type {
   ContentSettings,
   ContentSettingsFormData,
-  ContentFrequencyType,
-  PlanningPeriodType,
   ContentToneType,
   PreferredLengthType,
 } from './types/settings.types';
@@ -20,8 +18,6 @@ export type {
 export {
   contentSettingsSchema,
   contentSettingsFormSchema,
-  ContentFrequency,
-  PlanningPeriod,
   ContentTone,
   PreferredLength,
 } from './types/settings.types';

@@ -6,13 +6,13 @@ export const organizationMemberSchema = z.object({
 });
 
 // Content settings schema
+export const postingDayEnum = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']);
 export const contentSettingsSchema = z.object({
   id: z.string(),
   organizationId: z.string(),
   primaryKeywords: z.array(z.string()).min(1).max(10),
   secondaryKeywords: z.array(z.string()).max(20),
-  frequency: z.enum(['DAILY', 'WEEKLY', 'BIWEEKLY', 'MONTHLY']).nullable().optional(),
-  planningPeriod: z.enum(['WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY']).nullable().optional(),
+  postingDaysOfWeek: z.array(postingDayEnum).min(1).max(7),
   tone: z.enum(['professional', 'casual', 'friendly', 'formal', 'witty', 'educational']).nullable().optional(),
   targetAudience: z.string().max(200).nullable().optional(),
   industry: z.string().max(100).nullable().optional(),
@@ -20,8 +20,8 @@ export const contentSettingsSchema = z.object({
   competitorUrls: z.array(z.string().url()).max(10),
   topicsToAvoid: z.array(z.string()).max(20),
   preferredLength: z.enum(['SHORT_FORM', 'MEDIUM_FORM', 'LONG_FORM']).nullable().optional(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 // Organization schema
@@ -31,9 +31,9 @@ export const organizationSchema = z.object({
   slug: z.string(),
   mission: z.string().max(1000),
   description: z.string().max(2000).nullable().optional(),
-  websiteUrl: z.string().url().nullable().optional(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  websiteUrl: z.url().nullable().optional(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
   role: z.enum(['OWNER', 'ADMIN', 'MEMBER']).optional(), // User's role in this org
   members: z.array(organizationMemberSchema).optional(),
   contentSettings: contentSettingsSchema.optional(),

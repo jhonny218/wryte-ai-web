@@ -39,6 +39,7 @@ export function ContentSettingsForm({
   const goals = watch('goals') || [];
   const competitorUrls = watch('competitorUrls') || [];
   const topicsToAvoid = watch('topicsToAvoid') || [];
+  const postingDaysOfWeek = (watch('postingDaysOfWeek') as OnboardingFormData['postingDaysOfWeek']) || [];
 
   // Handler functions for tag management
   const handleAddTag = (
@@ -204,39 +205,37 @@ export function ContentSettingsForm({
             )}
           </div>
 
-          {/* Frequency */}
+          {/* Posting Days of Week */}
           <div className="space-y-2">
-            <label htmlFor="frequency" className="text-sm leading-none font-medium">
-              Content Frequency (Optional)
+            <label className="text-sm leading-none font-medium">
+              Posting Days of the Week <span className="text-destructive">*</span>
             </label>
-            <select
-              id="frequency"
-              {...register('frequency')}
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden"
-            >
-              <option value="">Select frequency...</option>
-              <option value="DAILY">Daily</option>
-              <option value="WEEKLY">Weekly</option>
-              <option value="BIWEEKLY">Bi-weekly</option>
-              <option value="MONTHLY">Monthly</option>
-            </select>
-          </div>
-
-          {/* Planning Period */}
-          <div className="space-y-2">
-            <label htmlFor="planningPeriod" className="text-sm leading-none font-medium">
-              Planning Period (Optional)
-            </label>
-            <select
-              id="planningPeriod"
-              {...register('planningPeriod')}
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden"
-            >
-              <option value="">Select planning period...</option>
-              <option value="QUARTERLY">Quarterly</option>
-              <option value="BIANNUAL">Bi-annual</option>
-              <option value="ANNUAL">Annual</option>
-            </select>
+            <div className="flex flex-wrap gap-3">
+              {(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'] as const).map((day) => (
+                <label key={day} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    value={day}
+                    checked={Array.isArray(postingDaysOfWeek) ? (postingDaysOfWeek as typeof day[]).includes(day) : false}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      let updated: typeof day[] = Array.isArray(postingDaysOfWeek) ? [...(postingDaysOfWeek as typeof day[])] : [];
+                      if (checked) {
+                        if (!updated.includes(day)) updated.push(day);
+                      } else {
+                        updated = updated.filter((d) => d !== day);
+                      }
+                      setValue('postingDaysOfWeek', updated, { shouldValidate: true, shouldDirty: true });
+                    }}
+                    className="accent-primary"
+                  />
+                  {day}
+                </label>
+              ))}
+            </div>
+            {'postingDaysOfWeek' in errors && errors.postingDaysOfWeek && (
+              <p className="text-destructive text-sm">{String(errors.postingDaysOfWeek.message)}</p>
+            )}
           </div>
         </div>
 

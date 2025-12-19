@@ -28,8 +28,7 @@ export function SettingsForm({ organizationId, initialData }: SettingsFormProps)
     defaultValues: {
       primaryKeywords: initialData?.primaryKeywords || [],
       secondaryKeywords: initialData?.secondaryKeywords || [],
-      frequency: initialData?.frequency || undefined,
-      planningPeriod: initialData?.planningPeriod || undefined,
+      postingDaysOfWeek: initialData?.postingDaysOfWeek || [],
       tone: initialData?.tone || undefined,
       targetAudience: initialData?.targetAudience || '',
       industry: initialData?.industry || '',
@@ -50,6 +49,8 @@ export function SettingsForm({ organizationId, initialData }: SettingsFormProps)
 
   // State for tag inputs
   const [primaryKeywordInput, setPrimaryKeywordInput] = useState('');
+      // useWatch must be called at the top level of the component
+      const postingDaysOfWeek = useWatch({ control, name: 'postingDaysOfWeek' }) || [];
   const [secondaryKeywordInput, setSecondaryKeywordInput] = useState('');
   const [goalInput, setGoalInput] = useState('');
   const [competitorUrlInput, setCompetitorUrlInput] = useState('');
@@ -135,6 +136,7 @@ export function SettingsForm({ organizationId, initialData }: SettingsFormProps)
             <h3 className="text-foreground border-b pb-2 text-lg font-semibold">Strategy</h3>
 
             {/* Primary Keywords */}
+            const postingDaysOfWeek = form.watch('postingDaysOfWeek') as readonly string[] | undefined;
             <div className="space-y-2">
               <label htmlFor="primaryKeywords" className="text-sm leading-none font-medium">
                 Primary Keywords <span className="text-destructive">*</span>
@@ -250,40 +252,38 @@ export function SettingsForm({ organizationId, initialData }: SettingsFormProps)
               )}
             </div>
 
-            {/* Frequency */}
+            {/* Posting Days of Week */}
+            {/* Posting Days of Week */}
             <div className="space-y-2">
-              <label htmlFor="frequency" className="text-sm leading-none font-medium">
-                Content Frequency (Optional)
+              <label className="text-sm leading-none font-medium">
+                Posting Days of the Week <span className="text-destructive">*</span>
               </label>
-              <select
-                id="frequency"
-                {...register('frequency')}
-                className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden"
-              >
-                <option value="">Select frequency...</option>
-                <option value="DAILY">Daily</option>
-                <option value="WEEKLY">Weekly</option>
-                <option value="BIWEEKLY">Bi-weekly</option>
-                <option value="MONTHLY">Monthly</option>
-              </select>
-            </div>
-
-            {/* Planning Period */}
-            <div className="space-y-2">
-              <label htmlFor="planningPeriod" className="text-sm leading-none font-medium">
-                Planning Period (Optional)
-              </label>
-              <select
-                id="planningPeriod"
-                {...register('planningPeriod')}
-                className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden"
-              >
-                <option value="">Select planning period...</option>
-                <option value="WEEKLY">Weekly</option>
-                <option value="MONTHLY">Monthly</option>
-                <option value="QUARTERLY">Quarterly</option>
-                <option value="YEARLY">Yearly</option>
-              </select>
+              <div className="flex flex-wrap gap-3">
+                {(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'] as const).map((day) => (
+                  <label key={day} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      value={day}
+                      checked={Array.isArray(postingDaysOfWeek) ? postingDaysOfWeek.includes(day) : false}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        let prev = (form.getValues('postingDaysOfWeek') as typeof day[] | undefined) || [];
+                        if (checked) {
+                          if (!prev.includes(day)) prev = [...prev, day];
+                        } else {
+                          prev = prev.filter((d) => d !== day);
+                        }
+                        form.setValue('postingDaysOfWeek', prev, { shouldValidate: true, shouldDirty: true });
+                      }}
+                      className="accent-primary"
+                    />
+                    {day}
+                  </label>
+                ))}
+              </div>
+              {errors.postingDaysOfWeek && (
+                <p className="text-destructive text-sm">{errors.postingDaysOfWeek.message}</p>
+              )}
             </div>
           </div>
 
