@@ -1,7 +1,7 @@
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import { SectionTitle } from '@/components/layout/section-title';
 import { useCurrentOrganization } from '@/features/organization';
-import { TitleActions } from '@/features/titles';
+import { TitleActions, TitleList } from '@/features/titles';
 
 export default function TitlesPage() {
   const { data: organization, isLoading: isLoadingOrg } = useCurrentOrganization();
@@ -23,9 +23,10 @@ export default function TitlesPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-4xl">
+    <div className="container mx-auto py-8 px-4 w-[80%]">
       <SectionTitle title="Titles" subtitle="Generate and manage content titles." />
       <TitleActions organizationId={organization.id} />
+      <TitleList organizationId={organization.id} />
     </div>
   );
 }
