@@ -102,8 +102,30 @@ export default function CalendarPage() {
   // Handler for rejecting a title
   const handleReject = async (title: Title) => {
     try {
-      await updateStatus({ titleId: title.id, status: 'REJECTED' });
-      toast.success('Title rejected successfully');
+      if (!title.scheduledDate) {
+        toast.error('Cannot reject title without scheduled date');
+        return;
+      }
+
+      // Delete the current title
+      await TitlesApi.deleteTitle(organization!.id, title.id);
+      
+      // Create a new title with the same scheduled date
+      const response = await TitlesApi.createTitles(organization!.id, [title.scheduledDate]);
+      
+      // Extract jobId from response
+      const responseData = response as { jobId?: string; id?: string; data?: { id?: string } };
+      const jobId = responseData?.jobId || responseData?.id || responseData?.data?.id;
+      
+      if (!jobId) {
+        console.error('No jobId found in response:', response);
+        toast.error('Failed to get job ID from server');
+        return;
+      }
+      
+      setCurrentJobId(jobId);
+      setCreatingDate(title.scheduledDate);
+      toast.info('Title rejected, generating new title... Please wait.');
     } catch (error) {
       console.error('Failed to reject title:', error);
       toast.error('Failed to reject title. Please try again.');

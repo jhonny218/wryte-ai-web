@@ -11,6 +11,8 @@ import { EditTitleSheet } from './EditTitleSheet';
 import { toast } from '@/hooks/useToast';
 import { useCallback, useMemo, useState } from 'react';
 import type { Title } from '../types/title.types';
+import { useJobStatus } from '@/hooks/useJobStatus';
+import { formatDate } from '@/hooks/useDateFormatter';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +35,24 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [titleToDelete, setTitleToDelete] = useState<Title | null>(null);
+  const [rejectJobId, setRejectJobId] = useState<string | null>(null);
+  const [rejectingDate, setRejectingDate] = useState<string | null>(null);
+
+  useJobStatus({
+    jobId: rejectJobId,
+    enabled: !!rejectJobId,
+    onComplete: async () => {
+      toast.success(`New title created successfully for ${rejectingDate ? formatDate(rejectingDate) : 'selected date'}!`);
+      await queryClient.refetchQueries({ queryKey: ['titles', organizationId] });
+      setRejectJobId(null);
+      setRejectingDate(null);
+    },
+    onError: (error) => {
+      toast.error(error || 'Failed to create new title.');
+      setRejectJobId(null);
+      setRejectingDate(null);
+    },
+  });
   
   const { data: titlesData, isLoading, error } = useQuery({
     queryKey: ['titles', organizationId],
@@ -66,13 +86,33 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
 
   const handleReject = useCallback(async (id: string) => {
     try {
-      await updateStatus({ titleId: id, status: 'REJECTED' });
-      toast.success('Title rejected successfully');
+      const title = titles?.find((t) => t.id === id);
+      if (!title || !title.scheduledDate) return;
+
+      // Delete the current title
+      await TitlesApi.deleteTitle(organizationId, id);
+      
+      // Create a new title with the same scheduled date
+      const response = await TitlesApi.createTitles(organizationId, [title.scheduledDate]);
+      
+      // Extract jobId from response
+      const responseData = response as { jobId?: string; id?: string; data?: { id?: string } };
+      const jobId = responseData?.jobId || responseData?.id || responseData?.data?.id;
+      
+      if (!jobId) {
+        console.error('No jobId found in response:', response);
+        toast.error('Failed to get job ID from server');
+        return;
+      }
+      
+      setRejectJobId(jobId);
+      setRejectingDate(title.scheduledDate);
+      toast.info('Title rejected, generating new title... Please wait.');
     } catch (error) {
       console.error('Failed to reject title:', error);
       toast.error('Failed to reject title. Please try again.');
     }
-  }, [updateStatus]);
+  }, [titles, organizationId]);
 
   const handleEdit = useCallback((id: string) => {
     const title = titles?.find((t) => t.id === id);
@@ -121,8 +161,8 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
   };
 
   const columns = useMemo(
-    () => createTitleColumns(handleApprove, handleReject, handleEdit, handleDelete),
-    [handleApprove, handleReject, handleEdit, handleDelete]
+    () => createTitleColumns(handleReject, handleApprove, handleEdit, handleDelete),
+    [handleReject, handleApprove, handleEdit, handleDelete]
   );
 
   if (isLoading) {
