@@ -33,14 +33,22 @@ interface CalendarViewProps {
   onEdit?: (title: Title) => void;
   onDelete?: (title: Title) => void;
   onCreate?: (date: Date) => void;
+  isCreating?: boolean;
+  onCreateComplete?: (closeDialog: () => void) => void;
 }
 
-export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, onCreate }: CalendarViewProps) {
+export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, onCreate, isCreating = false, onCreateComplete }: CalendarViewProps) {
   const [selectedTitle, setSelectedTitle] = useState<Title | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [createDate, setCreateDate] = useState<Date | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Handler to close create dialog
+  const handleCloseCreateDialog = useCallback(() => {
+    setCreateOpen(false);
+    setCreateDate(null);
+  }, []);
 
   // Convert titles to calendar events
   const events: CalendarEvent[] = useMemo(() => {
@@ -53,7 +61,7 @@ export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, on
     setDetailsOpen(true);
   }, []);
 
-  // Handle clicking on an empty slot (date without title)
+  // Pass close handler to parent when dialog opens
   const handleSelectSlot = useCallback((slotInfo: SlotInfo) => {
     // Only handle single day clicks in month view
     if (slotInfo.action === 'click') {
@@ -64,9 +72,17 @@ export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, on
       if (!hasEvent && onCreate) {
         setCreateDate(slotInfo.start);
         setCreateOpen(true);
+        // Pass the close handler to parent
+        onCreateComplete?.(handleCloseCreateDialog);
       }
     }
-  }, [events, onCreate]);
+  }, [events, onCreate, onCreateComplete, handleCloseCreateDialog]);
+
+  // Disable slot selection when creating
+  const handleSelectSlotWithCheck = useCallback((slotInfo: SlotInfo) => {
+    if (isCreating) return;
+    handleSelectSlot(slotInfo);
+  }, [isCreating, handleSelectSlot]);
 
   // Custom event style based on status
   const eventStyleGetter = useCallback((event: CalendarEvent) => {
@@ -166,8 +182,8 @@ export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, on
           date={currentDate}
           onNavigate={(date) => setCurrentDate(date)}
           onSelectEvent={handleSelectEvent}
-          onSelectSlot={handleSelectSlot}
-          selectable
+          onSelectSlot={handleSelectSlotWithCheck}
+          selectable={!isCreating}
           eventPropGetter={eventStyleGetter}
           components={{
             event: EventComponent,
@@ -191,6 +207,7 @@ export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, on
         open={createOpen}
         onOpenChange={setCreateOpen}
         onCreate={(date) => onCreate?.(date)}
+        isCreating={isCreating}
       />
     </>
   );

@@ -9,6 +9,8 @@ import type { Title } from '@/features/titles/types/title.types';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import { EditTitleSheet } from '@/features/titles/components/EditTitleSheet';
 import { useState } from 'react';
+import { useJobStatus } from '@/hooks/useJobStatus';
+import { formatDate } from '@/hooks/useDateFormatter';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,6 +29,36 @@ export default function CalendarPage() {
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [titleToDelete, setTitleToDelete] = useState<Title | null>(null);
+  const [currentJobId, setCurrentJobId] = useState<string | null>(null);
+  const [creatingDate, setCreatingDate] = useState<string | null>(null);
+  const [onDialogClose, setOnDialogClose] = useState<(() => void) | null>(null);
+
+  const { isPolling } = useJobStatus({
+    jobId: currentJobId,
+    enabled: !!currentJobId,
+    onComplete: async () => {
+      // Refetch titles to ensure data is fresh before closing dialog
+      await queryClient.refetchQueries({ queryKey: ['titles', organization?.id] });
+      toast.success(`Title created successfully for ${creatingDate ? formatDate(creatingDate) : 'selected date'}!`);
+      setCurrentJobId(null);
+      setCreatingDate(null);
+      // Close the dialog after data is refreshed
+      if (onDialogClose) {
+        onDialogClose();
+        setOnDialogClose(null);
+      }
+    },
+    onError: (error) => {
+      toast.error(error || 'Failed to create title.');
+      setCurrentJobId(null);
+      setCreatingDate(null);
+      // Close the dialog
+      if (onDialogClose) {
+        onDialogClose();
+        setOnDialogClose(null);
+      }
+    },
+  });
 
   // Fetch titles
   const { data: titles = [], isLoading, error } = useQuery({
@@ -112,7 +144,8 @@ export default function CalendarPage() {
 
   // Handler for creating a new title
   const handleCreate = async (date: Date) => {
-    console.log('Create title for date:', format(date, 'yyyy-MM-dd'));
+    const dateStr = format(date, 'yyyy-MM-dd');
+    console.log('Create title for date:', dateStr);
     
     if (!organization?.id) {
       toast.error('Organization ID not found');
@@ -121,10 +154,23 @@ export default function CalendarPage() {
 
     try {
       // Call API to create titles for the selected date
-      await TitlesApi.createTitles(organization.id, [format(date, 'yyyy-MM-dd')]);
-      toast.success(`Title generation started for ${format(date, 'MMMM d, yyyy')}`);
-      // Refetch titles to show the new one
-      await queryClient.invalidateQueries({ queryKey: ['titles', organization.id] });
+      const response = await TitlesApi.createTitles(organization.id, [dateStr]);
+      console.log('Create titles response:', response);
+      
+      // Extract jobId from response
+      const responseData = response as { jobId?: string; id?: string; data?: { id?: string } };
+      const jobId = responseData?.jobId || responseData?.id || responseData?.data?.id;
+      
+      if (!jobId) {
+        console.error('No jobId found in response:', response);
+        toast.error('Failed to get job ID from server');
+        return;
+      }
+      
+      console.log('Setting job ID:', jobId);
+      setCurrentJobId(jobId);
+      setCreatingDate(dateStr);
+      toast.info(`Creating title for ${formatDate(dateStr)}... Please wait.`);
     } catch (error) {
       console.error('Failed to create title:', error);
       toast.error('Failed to create title. Please try again.');
@@ -167,6 +213,8 @@ export default function CalendarPage() {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onCreate={handleCreate}
+          isCreating={isPolling}
+          onCreateComplete={(closeDialog) => setOnDialogClose(() => closeDialog)}
         />
       </div>
 
