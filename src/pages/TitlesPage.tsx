@@ -23,7 +23,7 @@ export default function TitlesPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 w-[80%]">
+    <div className="container mx-auto py-8 px-4 w-[90%]">
       <SectionTitle title="Titles" subtitle="Generate and manage content titles." />
       <TitleActions organizationId={organization.id} />
       <TitleList organizationId={organization.id} />
