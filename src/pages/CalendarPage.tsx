@@ -120,6 +120,19 @@ export default function CalendarPage() {
     }
   };
 
+  // Handler for event drop (drag and drop)
+  const handleEventDrop = async (titleId: string, newDate: Date) => {
+    try {
+      const scheduledDate = format(newDate, 'yyyy-MM-dd');
+      await TitlesApi.updateTitle(organization!.id, titleId, { scheduledDate });
+      toast.success('Title moved successfully');
+      await queryClient.refetchQueries({ queryKey: ['titles', organization?.id] });
+    } catch (error) {
+      console.error('Failed to move title:', error);
+      toast.error('Failed to move title. Please try again.');
+    }
+  };
+
   // Handler for deleting a title
   const handleDelete = (title: Title) => {
     setTitleToDelete(title);
@@ -213,6 +226,7 @@ export default function CalendarPage() {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onCreate={handleCreate}
+          onEventDrop={handleEventDrop}
           isCreating={isPolling}
           onCreateComplete={(closeDialog) => setOnDialogClose(() => closeDialog)}
         />

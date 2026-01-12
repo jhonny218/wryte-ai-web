@@ -1,7 +1,9 @@
 import { useMemo, useState, useCallback } from 'react';
 import { Calendar as BigCalendar, dateFnsLocalizer } from 'react-big-calendar';
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import type { SlotInfo } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import { enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '@/styles/calendar.css';
@@ -33,11 +35,15 @@ interface CalendarViewProps {
   onEdit?: (title: Title) => void;
   onDelete?: (title: Title) => void;
   onCreate?: (date: Date) => void;
+  onEventDrop?: (titleId: string, newDate: Date) => void;
   isCreating?: boolean;
   onCreateComplete?: (closeDialog: () => void) => void;
 }
 
-export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, onCreate, isCreating = false, onCreateComplete }: CalendarViewProps) {
+// Create drag and drop calendar with proper typing
+const DragAndDropCalendar = withDragAndDrop<CalendarEvent, object>(BigCalendar);
+
+export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, onCreate, onEventDrop, isCreating = false, onCreateComplete }: CalendarViewProps) {
   const [selectedTitle, setSelectedTitle] = useState<Title | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [createDate, setCreateDate] = useState<Date | null>(null);
@@ -83,6 +89,14 @@ export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, on
     if (isCreating) return;
     handleSelectSlot(slotInfo);
   }, [isCreating, handleSelectSlot]);
+
+  // Handle event drop
+  const handleEventDrop = useCallback((args: { event: CalendarEvent; start: Date | string; end: Date | string }) => {
+    const { event, start } = args;
+    const title = event.resource;
+    const newDate = start instanceof Date ? start : new Date(start);
+    onEventDrop?.(title.id, newDate);
+  }, [onEventDrop]);
 
   // Custom event style based on status
   const eventStyleGetter = useCallback((event: CalendarEvent) => {
@@ -172,7 +186,7 @@ export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, on
   return (
     <>
       <div className="h-[700px] w-full">
-        <BigCalendar
+        <DragAndDropCalendar
           localizer={localizer}
           events={events}
           startAccessor="start"
@@ -183,7 +197,10 @@ export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, on
           onNavigate={(date) => setCurrentDate(date)}
           onSelectEvent={handleSelectEvent}
           onSelectSlot={handleSelectSlotWithCheck}
+          onEventDrop={handleEventDrop}
           selectable={!isCreating}
+          draggableAccessor={() => !isCreating}
+          resizable={false}
           eventPropGetter={eventStyleGetter}
           components={{
             event: EventComponent,
