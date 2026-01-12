@@ -38,17 +38,35 @@ interface CalendarViewProps {
   onEventDrop?: (titleId: string, newDate: Date) => void;
   isCreating?: boolean;
   onCreateComplete?: (closeDialog: () => void) => void;
+  currentDate?: Date;
+  onNavigate?: (date: Date) => void;
 }
 
 // Create drag and drop calendar with proper typing
 const DragAndDropCalendar = withDragAndDrop<CalendarEvent, object>(BigCalendar);
 
-export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, onCreate, onEventDrop, isCreating = false, onCreateComplete }: CalendarViewProps) {
+export function CalendarView({ 
+  titles, 
+  onApprove, 
+  onReject, 
+  onEdit, 
+  onDelete, 
+  onCreate, 
+  onEventDrop, 
+  isCreating = false, 
+  onCreateComplete,
+  currentDate: externalCurrentDate,
+  onNavigate: externalOnNavigate
+}: CalendarViewProps) {
   const [selectedTitle, setSelectedTitle] = useState<Title | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [createDate, setCreateDate] = useState<Date | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [internalCurrentDate, setInternalCurrentDate] = useState(new Date());
+
+  // Use external date if provided, otherwise use internal state
+  const currentDate = externalCurrentDate || internalCurrentDate;
+  const handleNavigate = externalOnNavigate || setInternalCurrentDate;
 
   // Handler to close create dialog
   const handleCloseCreateDialog = useCallback(() => {
@@ -194,7 +212,7 @@ export function CalendarView({ titles, onApprove, onReject, onEdit, onDelete, on
           views={['month']}
           defaultView="month"
           date={currentDate}
-          onNavigate={(date) => setCurrentDate(date)}
+          onNavigate={handleNavigate}
           onSelectEvent={handleSelectEvent}
           onSelectSlot={handleSelectSlotWithCheck}
           onEventDrop={handleEventDrop}

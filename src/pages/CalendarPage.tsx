@@ -32,13 +32,17 @@ export default function CalendarPage() {
   const [currentJobId, setCurrentJobId] = useState<string | null>(null);
   const [creatingDate, setCreatingDate] = useState<string | null>(null);
   const [onDialogClose, setOnDialogClose] = useState<(() => void) | null>(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11
 
   const { isPolling } = useJobStatus({
     jobId: currentJobId,
     enabled: !!currentJobId,
     onComplete: async () => {
       // Refetch titles to ensure data is fresh before closing dialog
-      await queryClient.refetchQueries({ queryKey: ['titles', organization?.id] });
+      await queryClient.refetchQueries({ queryKey: ['calendar-titles', organization?.id, currentYear, currentMonth] });
       toast.success(`Title created successfully for ${creatingDate ? formatDate(creatingDate) : 'selected date'}!`);
       setCurrentJobId(null);
       setCreatingDate(null);
@@ -60,10 +64,19 @@ export default function CalendarPage() {
     },
   });
 
-  // Fetch titles
+  // Fetch titles for current month
   const { data: titles = [], isLoading, error } = useQuery({
-    queryKey: ['titles', organization?.id],
-    queryFn: () => TitlesApi.getTitles(organization!.id),
+    queryKey: ['calendar-titles', organization?.id, currentYear, currentMonth],
+    queryFn: async () => {
+      try {
+        const data = await TitlesApi.getCalendarTitles(organization!.id, currentYear, currentMonth);
+        console.log('Calendar titles fetched:', data);
+        return data;
+      } catch (err) {
+        console.error('Error fetching calendar titles:', err);
+        throw err;
+      }
+    },
     enabled: !!organization?.id,
   });
 
@@ -71,7 +84,7 @@ export default function CalendarPage() {
     mutationFn: ({ titleId, status }: { titleId: string; status: 'APPROVED' | 'REJECTED' }) =>
       TitlesApi.updateTitle(organization!.id, titleId, { status }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['titles', organization?.id] });
+      queryClient.invalidateQueries({ queryKey: ['calendar-titles', organization?.id, currentYear, currentMonth] });
     },
   });
 
@@ -111,7 +124,7 @@ export default function CalendarPage() {
     try {
       await TitlesApi.updateTitle(organization!.id, titleId, updates);
       toast.success('Title updated successfully');
-      await queryClient.invalidateQueries({ queryKey: ['titles', organization?.id] });
+      await queryClient.invalidateQueries({ queryKey: ['calendar-titles', organization?.id, currentYear, currentMonth] });
       setEditSheetOpen(false);
     } catch (error) {
       console.error('Failed to update title:', error);
@@ -126,7 +139,17 @@ export default function CalendarPage() {
       const scheduledDate = format(newDate, 'yyyy-MM-dd');
       await TitlesApi.updateTitle(organization!.id, titleId, { scheduledDate });
       toast.success('Title moved successfully');
-      await queryClient.refetchQueries({ queryKey: ['titles', organization?.id] });
+      
+      // Invalidate both current month and potentially the new month if different
+      const newYear = newDate.getFullYear();
+      const newMonth = newDate.getMonth() + 1;
+      
+      await queryClient.refetchQueries({ queryKey: ['calendar-titles', organization?.id, currentYear, currentMonth] });
+      
+      // If moved to a different month, invalidate that month too
+      if (newYear !== currentYear || newMonth !== currentMonth) {
+        await queryClient.invalidateQueries({ queryKey: ['calendar-titles', organization?.id, newYear, newMonth] });
+      }
     } catch (error) {
       console.error('Failed to move title:', error);
       toast.error('Failed to move title. Please try again.');
@@ -146,7 +169,7 @@ export default function CalendarPage() {
     try {
       await TitlesApi.deleteTitle(organization.id, titleToDelete.id);
       toast.success(`Title "${titleToDelete.title}" deleted successfully`);
-      await queryClient.invalidateQueries({ queryKey: ['titles', organization.id] });
+      await queryClient.invalidateQueries({ queryKey: ['calendar-titles', organization.id, currentYear, currentMonth] });
       setDeleteDialogOpen(false);
       setTitleToDelete(null);
     } catch (error) {
@@ -210,7 +233,10 @@ export default function CalendarPage() {
     return (
       <div className="container mx-auto py-8 px-4 w-[80%]">
         <SectionTitle title="Calendar" subtitle="View and manage your scheduled content." />
-        <div className="mt-8 text-destructive text-center">Failed to load calendar data.</div>
+        <div className="mt-8 text-destructive text-center">
+          <p>Failed to load calendar data.</p>
+          <p className="text-sm mt-2">{error instanceof Error ? error.message : 'Unknown error'}</p>
+        </div>
       </div>
     );
   }
@@ -229,6 +255,8 @@ export default function CalendarPage() {
           onEventDrop={handleEventDrop}
           isCreating={isPolling}
           onCreateComplete={(closeDialog) => setOnDialogClose(() => closeDialog)}
+          currentDate={currentDate}
+          onNavigate={setCurrentDate}
         />
       </div>
 

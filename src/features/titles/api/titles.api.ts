@@ -9,6 +9,19 @@ export const TitlesApi = {
     return response.data?.data || response.data;
   },
 
+  // get titles for a specific month
+  getCalendarTitles: async (organizationId: string, year: number, month: number): Promise<Title[]> => {
+    const paddedMonth = String(month).padStart(2, '0');
+    const response = await apiClient.get(`/calendar`, {
+      params: {
+        orgId: organizationId,
+        year: year.toString(),
+        month: paddedMonth
+      }
+    });
+    return response.data?.data || response.data;
+  },
+
   // post job to create titles
   createTitles: async (organizationId: string, dates: string[]): Promise<CreateTitlesJobResponse> => {
     const response = await apiClient.post(`/jobs/title/`, { organizationId, dates });

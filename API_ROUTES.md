@@ -37,6 +37,10 @@
 - `PUT /api/v1/titles/:orgId/:titleId` - Update a title (text/status/schedule)
 - `DELETE /api/v1/titles/:orgId/:titleId` - Delete a title
 
+### Calendar
+
+- `GET /api/v1/calendar` - Get calendar events for an organization (query: `year`, `month`, `orgId`)
+
 ### Jobs
 
 - `POST /api/v1/jobs/title` - Trigger title generation job
@@ -521,6 +525,52 @@ Delete a blog title for an organization.
 
 - Deleting is permanent (DB record removed). If you need soft-delete semantics, update the service to mark titles as removed instead of deleting.
 - Use this endpoint from the UI when editing title text, approving/rejecting, or scheduling.
+
+---
+
+## Calendar
+
+### `GET /api/v1/calendar`
+
+Get scheduled content events (titles) for a specific organization and month. Returns an array of scheduled titles and their dates.
+
+**Authentication**: Required (user must be a member of the organization)
+
+**Query Parameters** (required):
+
+- `year` — 4-digit year (e.g. `2026`)
+- `month` — month number `01`-`12` (or `1`-`12`)
+- `orgId` — Organization's database ID (cuid)
+
+Example request:
+
+```
+GET /api/v1/calendar?year=2026&month=01&orgId=clorg123456789
+```
+
+**Response** (200 OK):
+
+```json
+[
+  {
+    "id": "cltitle12345",
+    "title": "5 Ways to Automate Your Workflow",
+    "organizationId": "clorg123456789",
+    "scheduledDate": "2026-01-20T00:00:00.000Z",
+    "status": "PENDING"
+  }
+]
+```
+
+**Errors**:
+
+- `400 Bad Request` — Missing or invalid `year`, `month`, or `orgId` query params.
+- `404 Not Found` — Organization not found or invalid date range.
+
+**Notes**:
+
+- This endpoint returns scheduled titles within the given month (inclusive).
+- If you prefer route params instead of query params, the controller accepts both (query preferred for calendar queries).
 
 ## Jobs
 
