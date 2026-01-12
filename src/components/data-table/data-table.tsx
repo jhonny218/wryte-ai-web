@@ -20,14 +20,18 @@ import { Button } from "@/components/ui/button";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  defaultSortColumn?: string;
+  defaultSortDesc?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  defaultSortColumn = "createdAt",
+  defaultSortDesc = true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "createdAt", desc: true }
+    { id: defaultSortColumn, desc: defaultSortDesc }
   ]);
 
   // eslint-disable-next-line react-hooks/incompatible-library

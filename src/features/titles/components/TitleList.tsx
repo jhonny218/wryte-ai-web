@@ -24,20 +24,27 @@ import {
 
 interface TitleListProps {
   organizationId: string;
+  statusFilter?: string;
 }
 
-export const TitleList: React.FC<TitleListProps> = ({ organizationId }) => {
+export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilter = 'ALL' }) => {
   const queryClient = useQueryClient();
   const [editingTitle, setEditingTitle] = useState<Title | null>(null);
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [titleToDelete, setTitleToDelete] = useState<Title | null>(null);
   
-  const { data: titles, isLoading, error } = useQuery({
+  const { data: titlesData, isLoading, error } = useQuery({
     queryKey: ['titles', organizationId],
     queryFn: () => TitlesApi.getTitles(organizationId),
     enabled: !!organizationId,
   });
+
+  const titles = useMemo(() => {
+    if (!titlesData) return [];
+    if (statusFilter === 'ALL') return titlesData;
+    return titlesData.filter(title => title.status === statusFilter);
+  }, [titlesData, statusFilter]);
 
   const { mutateAsync: updateStatus } = useMutation({
     mutationFn: ({ titleId, status }: { titleId: string; status: 'APPROVED' | 'REJECTED' }) =>
@@ -166,6 +173,8 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId }) => {
         <DataTable 
           columns={columns} 
           data={titles}
+          defaultSortColumn="scheduledDate"
+          defaultSortDesc={true}
         />
       </CardContent>
 

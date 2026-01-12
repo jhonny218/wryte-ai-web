@@ -15,16 +15,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface TitleActionsProps {
   organizationId: string;
+  onStatusFilterChange?: (status: string) => void;
 }
 
-export const TitleActions: React.FC<TitleActionsProps> = ({ organizationId }) => {
+export const TitleActions: React.FC<TitleActionsProps> = ({ organizationId, onStatusFilterChange }) => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
   const [currentJobId, setCurrentJobId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
   const { job, isPolling } = useJobStatus({
     jobId: currentJobId,
@@ -81,8 +90,30 @@ export const TitleActions: React.FC<TitleActionsProps> = ({ organizationId }) =>
     }
   };
 
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value);
+    onStatusFilterChange?.(value);
+  };
+
   return (
-    <div className="my-6">
+    <div className="my-6 flex items-center justify-between gap-4">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">
+            Status: {statusFilter === 'ALL' ? 'All' : statusFilter}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuRadioGroup value={statusFilter} onValueChange={handleStatusFilterChange}>
+            <DropdownMenuRadioItem value="ALL">All</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="APPROVED">Approved</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="PENDING">Pending</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="REJECTED">Rejected</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="DRAFT">Draft</DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       <AlertDialog open={open} onOpenChange={setOpen}>
         <Button onClick={() => setOpen(true)} disabled={isPolling}>
           {isPolling ? (
