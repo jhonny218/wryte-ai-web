@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { TitlesApi } from '@/features/titles/api/titles.api';
-import type { Job } from '@/features/titles/types/job.types';
+import { JobsApi } from '../api/jobs.api';
+import type { Job } from '../types/job.types';
 
 interface UseJobStatusOptions {
   jobId: string | null;
@@ -39,7 +39,7 @@ export function useJobStatus({
     queryKey: ['job-status', jobId],
     queryFn: () => {
       console.log('Fetching job status for:', jobId);
-      return TitlesApi.getJobStatus(jobId!);
+      return JobsApi.getJobStatus(jobId!);
     },
     enabled: enabled && !!jobId,
     refetchInterval: (query) => {

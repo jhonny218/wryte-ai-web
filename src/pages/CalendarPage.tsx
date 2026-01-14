@@ -8,8 +8,8 @@ import { format } from 'date-fns';
 import type { Title } from '@/features/titles/types/title.types';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import { EditTitleSheet } from '@/features/titles/components/EditTitleSheet';
-import { useState } from 'react';
-import { useJobStatus } from '@/hooks/useJobStatus';
+import { useState, useCallback } from 'react';
+import { JobPoller } from '@/features/jobs/components/JobPoller';
 import { formatDate } from '@/hooks/useDateFormatter';
 import {
   AlertDialog,
@@ -29,40 +29,40 @@ export default function CalendarPage() {
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [titleToDelete, setTitleToDelete] = useState<Title | null>(null);
-  const [currentJobId, setCurrentJobId] = useState<string | null>(null);
-  const [creatingDate, setCreatingDate] = useState<string | null>(null);
-  const [onDialogClose, setOnDialogClose] = useState<(() => void) | null>(null);
+  const [pendingJobs, setPendingJobs] = useState<Array<{ jobId: string; date: string; closeDialog?: () => void }>>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11
 
-  const { isPolling } = useJobStatus({
-    jobId: currentJobId,
-    enabled: !!currentJobId,
-    onComplete: async () => {
-      // Refetch titles to ensure data is fresh before closing dialog
-      await queryClient.refetchQueries({ queryKey: ['calendar-titles', organization?.id, currentYear, currentMonth] });
-      toast.success(`Title created successfully for ${creatingDate ? formatDate(creatingDate) : 'selected date'}!`);
-      setCurrentJobId(null);
-      setCreatingDate(null);
-      // Close the dialog after data is refreshed
-      if (onDialogClose) {
-        onDialogClose();
-        setOnDialogClose(null);
+  const handleJobComplete = useCallback(async (jobId: string) => {
+    setPendingJobs(prev => {
+      const job = prev.find(j => j.jobId === jobId);
+      if (job) {
+        // Close dialog if provided
+        if (job.closeDialog) {
+          job.closeDialog();
+        }
+        toast.success(`Title created successfully for ${formatDate(job.date)}!`);
       }
-    },
-    onError: (error) => {
-      toast.error(error || 'Failed to create title.');
-      setCurrentJobId(null);
-      setCreatingDate(null);
-      // Close the dialog
-      if (onDialogClose) {
-        onDialogClose();
-        setOnDialogClose(null);
+      return prev.filter(j => j.jobId !== jobId);
+    });
+    // Refetch titles for the current month
+    await queryClient.refetchQueries({ queryKey: ['calendar-titles', organization?.id, currentYear, currentMonth] });
+  }, [queryClient, organization?.id, currentYear, currentMonth]);
+
+  const handleJobError = useCallback((jobId: string) => {
+    setPendingJobs(prev => {
+      const job = prev.find(j => j.jobId === jobId);
+      if (job?.closeDialog) {
+        job.closeDialog();
       }
-    },
-  });
+      return prev.filter(j => j.jobId !== jobId);
+    });
+    toast.error('Failed to create title.');
+  }, []);
+
+  const isPolling = pendingJobs.length > 0;
 
   // Fetch titles for current month
   const { data: titles = [], isLoading, error } = useQuery({
@@ -123,8 +123,7 @@ export default function CalendarPage() {
         return;
       }
       
-      setCurrentJobId(jobId);
-      setCreatingDate(title.scheduledDate);
+      setPendingJobs(prev => [...prev, { jobId, date: title.scheduledDate! }]);
       toast.info('Title rejected, generating new title... Please wait.');
     } catch (error) {
       console.error('Failed to reject title:', error);
@@ -201,7 +200,7 @@ export default function CalendarPage() {
   };
 
   // Handler for creating a new title
-  const handleCreate = async (date: Date) => {
+  const handleCreate = async (date: Date, onCreateComplete?: () => void) => {
     const dateStr = format(date, 'yyyy-MM-dd');
     console.log('Create title for date:', dateStr);
     
@@ -226,8 +225,11 @@ export default function CalendarPage() {
       }
       
       console.log('Setting job ID:', jobId);
-      setCurrentJobId(jobId);
-      setCreatingDate(dateStr);
+      setPendingJobs(prev => [...prev, { 
+        jobId, 
+        date: dateStr,
+        closeDialog: onCreateComplete 
+      }]);
       toast.info(`Creating title for ${formatDate(dateStr)}... Please wait.`);
     } catch (error) {
       console.error('Failed to create title:', error);
@@ -276,11 +278,21 @@ export default function CalendarPage() {
           onCreate={handleCreate}
           onEventDrop={handleEventDrop}
           isCreating={isPolling}
-          onCreateComplete={(closeDialog) => setOnDialogClose(() => closeDialog)}
           currentDate={currentDate}
           onNavigate={setCurrentDate}
         />
       </div>
+
+      {/* Job pollers for each pending job */}
+      {pendingJobs.map((job) => (
+        <JobPoller
+          key={job.jobId}
+          jobId={job.jobId}
+          date={job.date}
+          onComplete={handleJobComplete}
+          onError={handleJobError}
+        />
+      ))}
 
       <EditTitleSheet
         title={editingTitle}

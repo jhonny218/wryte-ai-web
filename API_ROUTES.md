@@ -37,6 +37,18 @@
 - `PUT /api/v1/titles/:orgId/:titleId` - Update a title (text/status/schedule)
 - `DELETE /api/v1/titles/:orgId/:titleId` - Delete a title
 
+### Outlines
+
+- `GET /api/v1/outlines/:orgId` - Get outlines for organization
+- `PUT /api/v1/outlines/:orgId/:outlineId` - Update an outline
+- `DELETE /api/v1/outlines/:orgId/:outlineId` - Delete an outline
+
+### Blogs
+
+- `GET /api/v1/blogs/:orgId` - Get blogs for organization
+- `PUT /api/v1/blogs/:orgId/:blogId` - Update a blog
+- `DELETE /api/v1/blogs/:orgId/:blogId` - Delete a blog
+
 ### Calendar
 
 - `GET /api/v1/calendar` - Get calendar events for an organization (query: `year`, `month`, `orgId`)
@@ -44,6 +56,8 @@
 ### Jobs
 
 - `POST /api/v1/jobs/title` - Trigger title generation job
+- `POST /api/v1/jobs/outline` - Trigger outline generation job
+- `POST /api/v1/jobs/blog` - Trigger blog generation job
 - `GET /api/v1/jobs/:jobId` - Get job status by ID
 
 ### Webhooks
@@ -652,6 +666,292 @@ Trigger an asynchronous job to generate blog titles using Google Gemini.
     "status": "PENDING",
     "createdAt": "2025-01-01T12:00:00.000Z"
   }
+}
+```
+
+---
+
+### `POST /api/v1/jobs/outline`
+
+Trigger an asynchronous job to generate a blog outline using Google Gemini.
+
+**Authentication**: Required
+
+**Request Body**:
+
+```json
+{
+  "blogTitleId": "cltitle123456789",
+  "additionalInstructions": "Focus on practical examples"
+}
+```
+
+**Validation**:
+
+- `blogTitleId`: Required string (cuid)
+- `additionalInstructions`: Optional string (max 1000 chars)
+
+**Response** (202 Accepted):
+
+```json
+{
+  "status": "accepted",
+  "data": {
+    "id": "cljob987654321",
+    "userId": "cluser12345",
+    "organizationId": null,
+    "type": "GENERATE_OUTLINE",
+    "status": "PENDING",
+    "createdAt": "2025-01-01T12:00:00.000Z"
+  }
+}
+```
+
+---
+
+### `POST /api/v1/jobs/blog`
+
+Trigger an asynchronous job to generate a full blog post using Google Gemini.
+
+**Authentication**: Required
+
+**Request Body**:
+
+```json
+{
+  "blogOutlineId": "cloutline123456789",
+  "additionalInstructions": "Keep it under 2000 words"
+}
+```
+
+**Validation**:
+
+- `blogOutlineId`: Required string (cuid)
+- `additionalInstructions`: Optional string
+
+**Response** (202 Accepted):
+
+```json
+{
+  "status": "accepted",
+  "data": {
+    "id": "cljob555666777",
+    "userId": "cluser12345",
+    "organizationId": null,
+    "type": "GENERATE_BLOG",
+    "status": "PENDING",
+    "createdAt": "2025-01-01T12:00:00.000Z"
+  }
+}
+```
+
+---
+
+## Outlines
+
+### `GET /api/v1/outlines/:orgId`
+
+Get all blog outlines for an organization.
+
+**Authentication**: Required (must be a member of the organization)
+
+**URL Parameters**:
+
+- `orgId` - Organization's database ID (cuid)
+
+**Response** (200 OK):
+
+```json
+[
+  {
+    "id": "cloutline123456789",
+    "blogTitleId": "cltitle123456789",
+    "structure": {
+      "sections": [
+        {
+          "heading": "Introduction",
+          "bullets": ["Hook the reader", "Explain the problem"]
+        }
+      ]
+    },
+    "seoKeywords": ["AI", "automation"],
+    "metaDescription": "Learn how AI transforms workflows",
+    "suggestedImages": ["hero.jpg"],
+    "status": "PENDING",
+    "createdAt": "2025-01-01T10:00:00.000Z",
+    "updatedAt": "2025-01-01T10:00:00.000Z"
+  }
+]
+```
+
+---
+
+### `PUT /api/v1/outlines/:orgId/:outlineId`
+
+Update a blog outline for an organization.
+
+**Authentication**: Required (must be a member of the organization)
+
+**URL Parameters**:
+
+- `orgId` - Organization's database ID (cuid)
+- `outlineId` - Outline's database ID (cuid)
+
+**Request Body** (all fields optional):
+
+```json
+{
+  "structure": {
+    "sections": [
+      {
+        "heading": "Updated Section",
+        "bullets": ["New point 1", "New point 2"]
+      }
+    ]
+  },
+  "seoKeywords": ["keyword1", "keyword2"],
+  "metaDescription": "Updated meta description",
+  "suggestedImages": ["image1.jpg"],
+  "status": "APPROVED"
+}
+```
+
+**Response** (200 OK):
+
+```json
+{
+  "id": "cloutline123456789",
+  "blogTitleId": "cltitle123456789",
+  "structure": { "sections": [...] },
+  "seoKeywords": ["keyword1", "keyword2"],
+  "metaDescription": "Updated meta description",
+  "suggestedImages": ["image1.jpg"],
+  "status": "APPROVED",
+  "createdAt": "2025-01-01T10:00:00.000Z",
+  "updatedAt": "2025-01-01T12:00:00.000Z"
+}
+```
+
+---
+
+### `DELETE /api/v1/outlines/:orgId/:outlineId`
+
+Delete a blog outline for an organization.
+
+**Authentication**: Required (must be a member of the organization)
+
+**URL Parameters**:
+
+- `orgId` - Organization's database ID (cuid)
+- `outlineId` - Outline's database ID (cuid)
+
+**Response** (200 OK):
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "data": null,
+  "message": "Outline deleted successfully"
+}
+```
+
+---
+
+## Blogs
+
+### `GET /api/v1/blogs/:orgId`
+
+Get all full blog posts for an organization.
+
+**Authentication**: Required (must be a member of the organization)
+
+**URL Parameters**:
+
+- `orgId` - Organization's database ID (cuid)
+
+**Response** (200 OK):
+
+```json
+[
+  {
+    "id": "clblog123456789",
+    "blogOutlineId": "cloutline123456789",
+    "content": "# Introduction\n\nThis is the blog content...",
+    "htmlContent": "<h1>Introduction</h1><p>This is the blog content...</p>",
+    "wordCount": 1250,
+    "status": "DRAFT",
+    "publishedAt": null,
+    "exportedAt": null,
+    "createdAt": "2025-01-01T10:00:00.000Z",
+    "updatedAt": "2025-01-01T10:00:00.000Z"
+  }
+]
+```
+
+---
+
+### `PUT /api/v1/blogs/:orgId/:blogId`
+
+Update a full blog post for an organization.
+
+**Authentication**: Required (must be a member of the organization)
+
+**URL Parameters**:
+
+- `orgId` - Organization's database ID (cuid)
+- `blogId` - Blog's database ID (cuid)
+
+**Request Body** (all fields optional):
+
+```json
+{
+  "content": "# Updated Introduction\n\nUpdated blog content...",
+  "htmlContent": "<h1>Updated Introduction</h1><p>Updated blog content...</p>",
+  "wordCount": 1500,
+  "status": "APPROVED",
+  "publishedAt": "2025-01-15T10:00:00.000Z"
+}
+```
+
+**Response** (200 OK):
+
+```json
+{
+  "id": "clblog123456789",
+  "blogOutlineId": "cloutline123456789",
+  "content": "# Updated Introduction\n\nUpdated blog content...",
+  "htmlContent": "<h1>Updated Introduction</h1><p>Updated blog content...</p>",
+  "wordCount": 1500,
+  "status": "APPROVED",
+  "publishedAt": "2025-01-15T10:00:00.000Z",
+  "exportedAt": null,
+  "createdAt": "2025-01-01T10:00:00.000Z",
+  "updatedAt": "2025-01-01T14:00:00.000Z"
+}
+```
+
+---
+
+### `DELETE /api/v1/blogs/:orgId/:blogId`
+
+Delete a full blog post for an organization.
+
+**Authentication**: Required (must be a member of the organization)
+
+**URL Parameters**:
+
+- `orgId` - Organization's database ID (cuid)
+- `blogId` - Blog's database ID (cuid)
+
+**Response** (200 OK):
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "data": null,
+  "message": "Blog deleted successfully"
 }
 ```
 

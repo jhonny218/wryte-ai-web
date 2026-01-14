@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { TitlesApi } from '../api/titles.api';
+import { OutlinesApi } from '@/features/outlines/api/outlines.api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -11,7 +12,7 @@ import { EditTitleSheet } from './EditTitleSheet';
 import { toast } from '@/hooks/useToast';
 import { useCallback, useMemo, useState } from 'react';
 import type { Title } from '../types/title.types';
-import { useJobStatus } from '@/hooks/useJobStatus';
+import { JobPoller } from '@/features/jobs/components/JobPoller';
 import { formatDate } from '@/hooks/useDateFormatter';
 import {
   AlertDialog,
@@ -35,24 +36,21 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [titleToDelete, setTitleToDelete] = useState<Title | null>(null);
-  const [rejectJobId, setRejectJobId] = useState<string | null>(null);
-  const [rejectingDate, setRejectingDate] = useState<string | null>(null);
+  const [pendingJobs, setPendingJobs] = useState<Array<{ jobId: string; date: string }>>([]);
 
-  useJobStatus({
-    jobId: rejectJobId,
-    enabled: !!rejectJobId,
-    onComplete: async () => {
-      toast.success(`New title created successfully for ${rejectingDate ? formatDate(rejectingDate) : 'selected date'}!`);
+  const handleJobComplete = useCallback(async (jobId: string) => {
+    const job = pendingJobs.find(j => j.jobId === jobId);
+    if (job) {
+      toast.success(`New title created successfully for ${formatDate(job.date)}!`);
       await queryClient.refetchQueries({ queryKey: ['titles', organizationId] });
-      setRejectJobId(null);
-      setRejectingDate(null);
-    },
-    onError: (error) => {
-      toast.error(error || 'Failed to create new title.');
-      setRejectJobId(null);
-      setRejectingDate(null);
-    },
-  });
+      setPendingJobs(prev => prev.filter(j => j.jobId !== jobId));
+    }
+  }, [pendingJobs, queryClient, organizationId]);
+
+  const handleJobError = useCallback((jobId: string) => {
+    toast.error('Failed to create new title.');
+    setPendingJobs(prev => prev.filter(j => j.jobId !== jobId));
+  }, []);
   
   const { data: titlesData, isLoading, error } = useQuery({
     queryKey: ['titles', organizationId],
@@ -76,18 +74,23 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
 
   const handleApprove = useCallback(async (id: string) => {
     try {
+      // Update title status to APPROVED
       await updateStatus({ titleId: id, status: 'APPROVED' });
-      toast.success('Title approved successfully');
+      
+      // Create outline for the approved title
+      await OutlinesApi.createOutlines(organizationId, id);
+      
+      toast.success('Title approved and outline creation started');
     } catch (error) {
       console.error('Failed to approve title:', error);
       toast.error('Failed to approve title. Please try again.');
     }
-  }, [updateStatus]);
+  }, [updateStatus, organizationId]);
 
   const handleReject = useCallback(async (id: string) => {
     try {
       const title = titles?.find((t) => t.id === id);
-      if (!title || !title.scheduledDate) return;
+      if (!title?.scheduledDate) return;
 
       // Delete the current title
       await TitlesApi.deleteTitle(organizationId, id);
@@ -105,8 +108,8 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
         return;
       }
       
-      setRejectJobId(jobId);
-      setRejectingDate(title.scheduledDate);
+      // Add this job to the pending jobs list
+      setPendingJobs(prev => [...prev, { jobId, date: title.scheduledDate! }]);
       toast.info('Title rejected, generating new title... Please wait.');
     } catch (error) {
       console.error('Failed to reject title:', error);
@@ -202,45 +205,58 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Generated Titles</CardTitle>
-        <CardDescription>
-          {titles.length} {titles.length === 1 ? 'title' : 'titles'} available
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable 
-          columns={columns} 
-          data={titles}
-          defaultSortColumn="scheduledDate"
-          defaultSortDesc={true}
+    <>
+      {/* Job Pollers - hidden components that poll for job status */}
+      {pendingJobs.map(({ jobId, date }) => (
+        <JobPoller
+          key={jobId}
+          jobId={jobId}
+          date={date}
+          onComplete={handleJobComplete}
+          onError={handleJobError}
         />
-      </CardContent>
+      ))}
 
-      <EditTitleSheet
-        title={editingTitle}
-        open={editSheetOpen}
-        onOpenChange={setEditSheetOpen}
-        onSave={handleSaveEdit}
-      />
+      <Card>
+        <CardHeader>
+          <CardTitle>Generated Titles</CardTitle>
+          <CardDescription>
+            {titles.length} {titles.length === 1 ? 'title' : 'titles'} available
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DataTable 
+            columns={columns} 
+            data={titles}
+            defaultSortColumn="scheduledDate"
+            defaultSortDesc={true}
+          />
+        </CardContent>
 
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Title</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete "{titleToDelete?.title}"? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </Card>
+        <EditTitleSheet
+          title={editingTitle}
+          open={editSheetOpen}
+          onOpenChange={setEditSheetOpen}
+          onSave={handleSaveEdit}
+        />
+
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Title</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete "{titleToDelete?.title}"? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </Card>
+    </>
   );
 };

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { TitlesApi } from '../api/titles.api';
 import { toast } from '@/hooks/useToast';
 import { useQueryClient } from '@tanstack/react-query';
-import { useJobStatus } from '@/hooks/useJobStatus';
+import { useJobStatus } from '../../jobs/hooks/useJobStatus';
 import { Loader2 } from 'lucide-react';
 import {
   AlertDialog,

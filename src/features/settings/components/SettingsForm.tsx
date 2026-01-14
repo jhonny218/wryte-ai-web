@@ -136,7 +136,6 @@ export function SettingsForm({ organizationId, initialData }: SettingsFormProps)
             <h3 className="text-foreground border-b pb-2 text-lg font-semibold">Strategy</h3>
 
             {/* Primary Keywords */}
-            const postingDaysOfWeek = form.watch('postingDaysOfWeek') as readonly string[] | undefined;
             <div className="space-y-2">
               <label htmlFor="primaryKeywords" className="text-sm leading-none font-medium">
                 Primary Keywords <span className="text-destructive">*</span>
