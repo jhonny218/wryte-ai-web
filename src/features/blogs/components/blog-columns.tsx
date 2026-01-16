@@ -101,16 +101,17 @@ export const createBlogColumns = (
             {isDraft && onApprove && onReject && (
               <>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onApprove(row.original.id)}
-                      className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                    >
-                      <Check className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Approve"
+                        onClick={() => onApprove(row.original.id)}
+                        className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                      >
+                        <Check className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
                   <TooltipContent>Approve</TooltipContent>
                 </Tooltip>
                 <Tooltip>
@@ -118,6 +119,7 @@ export const createBlogColumns = (
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label="Reject"
                       onClick={() => onReject(row.original.id)}
                       className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
                     >
@@ -133,6 +135,7 @@ export const createBlogColumns = (
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="View"
                   onClick={() => onView(row.original.id)}
                 >
                   <Eye className="h-4 w-4" />
@@ -145,6 +148,7 @@ export const createBlogColumns = (
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Edit"
                   onClick={() => onEdit(row.original.id)}
                 >
                   <Pencil className="h-4 w-4" />
@@ -157,6 +161,7 @@ export const createBlogColumns = (
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Export"
                   onClick={() => onExport(row.original.id)}
                   className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                 >
@@ -170,6 +175,7 @@ export const createBlogColumns = (
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Delete"
                   onClick={() => onDelete(row.original.id)}
                   className="text-destructive hover:text-destructive"
                 >

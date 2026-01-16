@@ -61,6 +61,7 @@ export const createTitleColumns = (
                     size="icon"
                     onClick={() => onReject(row.original.id)}
                     className="text-destructive hover:text-destructive"
+                    aria-label="Reject"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -78,6 +79,7 @@ export const createTitleColumns = (
                     size="icon"
                     onClick={() => onApprove(row.original.id)}
                     className="text-green-600 hover:text-green-600"
+                    aria-label="Approve"
                   >
                     <Check className="h-4 w-4" />
                   </Button>
@@ -93,6 +95,7 @@ export const createTitleColumns = (
                   variant="ghost"
                   size="icon"
                   onClick={() => onEdit(row.original.id)}
+                  aria-label="Edit"
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
@@ -106,6 +109,7 @@ export const createTitleColumns = (
                   size="icon"
                   onClick={() => onDelete(row.original.id)}
                   className="text-destructive hover:text-destructive"
+                  aria-label="Delete"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

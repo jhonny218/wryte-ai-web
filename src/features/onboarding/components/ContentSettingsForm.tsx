@@ -467,7 +467,7 @@ export function ContentSettingsForm({
 
         {/* Action Buttons */}
         <div className="flex justify-between border-t pt-4">
-          <Button onClick={onBack} variant="outline" size="lg" type="button">
+          <Button onClick={onBack} variant="outline" size="lg" type="button" disabled={isSubmitting}>
             Back
           </Button>
           <Button onClick={onSubmit} size="lg" type="button" disabled={isSubmitting}>

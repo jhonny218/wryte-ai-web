@@ -162,7 +162,7 @@ export function SEOPanel({
                   <Input
                     value={image}
                     onChange={(e) => handleImageChange(index, e.target.value)}
-                    placeholder={`Image description ${index + 1}`}
+                    placeholder={`Image URL or description ${index + 1}`}
                     className="pl-4"
                   />
                   <Button

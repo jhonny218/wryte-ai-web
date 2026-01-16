@@ -133,7 +133,7 @@ export function BlogList({ organizationId, onView, onEdit, onExport }: Props) {
       <div className="flex items-center justify-between mb-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" aria-label="Filter">
               <Filter className="mr-2 h-4 w-4" />
               Status: {statusFilter}
             </Button>

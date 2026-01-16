@@ -135,8 +135,9 @@ export const TitleActions: React.FC<TitleActionsProps> = ({ organizationId, onSt
           </AlertDialogHeader>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium mb-2">Scheduled date</label>
+            <label htmlFor="scheduledDate" className="block text-sm font-medium mb-2">Scheduled date</label>
             <input
+              id="scheduledDate"
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}

@@ -36,7 +36,7 @@ export const createOutlineColumns = (
       accessorKey: "seoKeywords",
       header: "Keywords",
       cell: ({ row }) => {
-        const keywords = row.getValue("seoKeywords") as string[];
+        const keywords = (row.getValue("seoKeywords") as string[]) || [];
         return (
           <div className="flex gap-1 flex-wrap max-w-[250px]">
             {keywords.slice(0, 3).map((keyword, i) => (
@@ -87,6 +87,7 @@ export const createOutlineColumns = (
                       size="icon"
                       onClick={() => onApprove(row.original.id)}
                       className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                      aria-label="Approve"
                     >
                       <Check className="h-4 w-4" />
                     </Button>
@@ -100,6 +101,7 @@ export const createOutlineColumns = (
                       size="icon"
                       onClick={() => onReject(row.original.id)}
                       className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+                      aria-label="Reject"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -114,6 +116,7 @@ export const createOutlineColumns = (
                   variant="ghost"
                   size="icon"
                   onClick={() => onView(row.original.id)}
+                  aria-label="View"
                 >
                   <Eye className="h-4 w-4" />
                 </Button>
@@ -126,6 +129,7 @@ export const createOutlineColumns = (
                   variant="ghost"
                   size="icon"
                   onClick={() => onEdit(row.original.id)}
+                  aria-label="Edit"
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
@@ -139,6 +143,7 @@ export const createOutlineColumns = (
                   size="icon"
                   onClick={() => onDelete(row.original.id)}
                   className="text-destructive hover:text-destructive"
+                  aria-label="Delete"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

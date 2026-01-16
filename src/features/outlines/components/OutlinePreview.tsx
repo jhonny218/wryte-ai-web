@@ -216,12 +216,12 @@ export function OutlinePreview({
                 <div className="space-y-3">
                   <p className="text-sm font-medium">Target Keywords</p>
                   <div className="flex gap-2 flex-wrap">
-                    {outline.seoKeywords.map((keyword, i) => (
-                      <Badge key={i} variant="secondary" className="font-normal">
-                        {keyword}
-                      </Badge>
-                    ))}
-                  </div>
+                      {(outline.seoKeywords || []).map((keyword, i) => (
+                        <Badge key={i} variant="secondary" className="font-normal">
+                          {keyword}
+                        </Badge>
+                      ))}
+                    </div>
                 </div>
 
                 {/* Meta Description */}
@@ -248,10 +248,9 @@ export function OutlinePreview({
                         <p className="text-sm font-medium">Suggested Images</p>
                       </div>
                       <ul className="space-y-2">
-                        {(outline.suggestedImages.length > 0
-                          ? outline.suggestedImages
-                          : outline.structure?.structure?.suggestedImages || []
-                        ).map((image, i) => (
+                        {((outline.suggestedImages && outline.suggestedImages.length > 0
+                                  ? outline.suggestedImages
+                                  : outline.structure?.structure?.suggestedImages || []) || []).map((image, i) => (
                           <li key={i} className="text-sm text-muted-foreground flex items-start gap-2 pl-2">
                             <span className="text-primary mt-1.5">•</span>
                             <span>{image}</span>
@@ -276,9 +275,11 @@ export function OutlinePreview({
               variant="outline"
               size="lg"
               className="text-destructive hover:text-destructive"
+              aria-label="Delete"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
+
           </div>
         </div>
       </SheetContent>
