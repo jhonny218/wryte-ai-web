@@ -28,4 +28,11 @@
     }
   },
   "include": ["src"]
+  ,
+  "exclude": [
+    "**/*.test.*",
+    "**/*.spec.*",
+    "src/test/**",
+    "e2e/**"
+  ]
 }

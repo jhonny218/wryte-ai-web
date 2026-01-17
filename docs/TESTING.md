@@ -56,15 +56,29 @@ npm test -- feedback
 ### E2E Tests (Playwright)
 
 ```bash
+# First time setup - install browsers
+npx playwright install
+
 # Run E2E tests
 npm run test:e2e
 
-# Run E2E tests with UI
+# Run E2E tests with UI (recommended for development)
 npm run test:e2e:ui
 
-# Run specific E2E test
-npx playwright test auth.spec.ts
+# Run specific test file
+npx playwright test authentication.spec.ts
+
+# Run in headed mode (see browser)
+npx playwright test --headed
+
+# Debug mode
+npx playwright test --debug
+
+# View test report
+npx playwright show-report
 ```
+
+**Note**: E2E tests use mocked Clerk authentication and API responses. See `e2e/README.md` for details.
 
 ## Writing Tests
 
@@ -323,12 +337,49 @@ jobs:
       - run: npm run test:coverage
 ```
 
+## E2E Test Structure
+
+E2E tests are located in the `e2e/` directory:
+
+```
+e2e/
+├── fixtures/
+│   └── auth.fixture.ts        # Auth state setup
+├── tests/
+│   ├── auth/                  # Authentication tests
+│   ├── onboarding/            # Onboarding flow tests
+│   └── dashboard/             # Dashboard tests
+├── utils/
+│   └── api-mocks.ts          # API mocking utilities
+└── README.md
+```
+
+### E2E Test Example
+
+```typescript
+import { test, expect } from '../../fixtures/auth.fixture';
+import { setupApiMocks } from '../../utils/api-mocks';
+
+test.describe('My Feature', () => {
+  test('user can complete action', async ({ authenticatedPage }) => {
+    const page = authenticatedPage;
+    await setupApiMocks(page);
+    
+    await page.goto('/org/test-org/dashboard');
+    await page.getByRole('button', { name: /create/i }).click();
+    
+    await expect(page.getByText('Success')).toBeVisible();
+  });
+});
+```
+
 ## Next Steps
 
 1. ✅ Unit tests for `src/components` - **COMPLETE**
-2. 🔄 Unit tests for `src/lib` utilities
-3. 🔄 Integration tests for feature components
-4. 🔄 E2E tests for critical user journeys
+2. ✅ E2E tests for authentication & onboarding - **COMPLETE**
+3. 🔄 Unit tests for `src/lib` utilities
+4. 🔄 Integration tests for feature components
+5. 🔄 E2E tests for titles, outlines, blogs, calendar
 
 ## Resources
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OutlinesApi } from './outlines.api';
-import { apiClient } from '@/lib/api-client';
-import type { Outline } from '@/features/outlines/types/outline.types';
+import { apiClient } from '../../../lib/api-client';
+import type { Outline } from '../types/outline.types';
 
 // Test-only shape used by these unit tests. The real `Outline` zod schema
 // stores content under `structure`, but tests here use a simpler shape.

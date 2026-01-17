@@ -6,6 +6,8 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
+    // Do not run e2e Playwright tests or tests inside node_modules with Vitest
+    exclude: ['e2e/**', 'node_modules/**'],
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
@@ -15,6 +17,7 @@ export default defineConfig({
       exclude: [
         'node_modules/',
         'src/test/',
+        'e2e/**',
         'src/assets/**', // Exclude static assets
         '**/*.d.ts',
         '**/*.config.{ts,js}',

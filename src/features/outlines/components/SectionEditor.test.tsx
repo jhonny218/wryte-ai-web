@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { screen, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SectionEditor } from './SectionEditor';
-import { renderWithProviders } from '@/test/utils/test-utils';
+import { renderWithProviders } from '../../../test/utils/test-utils';
 import type { OutlineSection } from '../types/outline.types';
 
 describe('SectionEditor', () => {
