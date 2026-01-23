@@ -6,7 +6,7 @@ import { useUserOrganizations } from '@/features/organization';
 
 export function AuthenticatedRoot() {
   const { isSignedIn, isLoaded } = useAuth();
-  const { data: orgData, isLoading: orgLoading, isError } = useUserOrganizations();
+  const { data: orgData, isLoading: orgLoading, isError, error } = useUserOrganizations();
 
   // Wait for organization data to load
   if (!isLoaded || orgLoading) {
@@ -22,8 +22,26 @@ export function AuthenticatedRoot() {
     return <Navigate to={ROUTES.SIGN_IN} replace />;
   }
 
-  // Handle error state
-  if (isError || !orgData) {
+  // Handle error state: if fetching organizations errored (server/backend issue),
+  // redirect the user back to the public landing page so they are not stuck
+  // inside the authenticated/onboarding flow. If data is simply missing
+  // (no orgData), continue to onboarding flow.
+  if (isError) {
+    // Forward the server error message to the landing page so it can show user feedback
+    const message =
+      typeof error === 'object' && error !== null && 'message' in error && typeof (error as { message?: unknown }).message === 'string'
+        ? (error as { message: string }).message
+        : 'Server error. Please try again later.';
+    return (
+      <Navigate
+        to={ROUTES.HOME}
+        replace
+        state={{ from: 'org_error', message }}
+      />
+    );
+  }
+
+  if (!orgData) {
     return <Navigate to={ROUTES.ONBOARDING} replace />;
   }
 
