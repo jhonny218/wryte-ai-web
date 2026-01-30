@@ -9,6 +9,12 @@ interface State {
   error: Error | null;
 }
 
+type NewRelicWindow = Window & {
+  newrelic?: {
+    noticeError: (error: Error, customAttributes?: Record<string, unknown>) => void;
+  };
+};
+
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
@@ -21,6 +27,19 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
+
+    // Report error to New Relic if available
+    try {
+      const win = window as NewRelicWindow;
+      if (win.newrelic?.noticeError) {
+        win.newrelic.noticeError(error, {
+          componentStack: errorInfo.componentStack,
+          errorBoundary: true,
+        });
+      }
+    } catch {
+      // Silently ignore if New Relic reporting fails
+    }
   }
 
   public render() {

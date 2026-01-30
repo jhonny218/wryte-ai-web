@@ -47,6 +47,7 @@ export function BlogExport({ blog, open, onOpenChange }: Props) {
         div.innerHTML = blog.htmlContent || "";
         return div.textContent || div.innerText || "";
       }
+      /* istanbul ignore next -- @preserve unreachable default case for type safety */
       default:
         return "";
     }

@@ -177,4 +177,87 @@ describe('BlogExport', () => {
 
     expect(toast.error).toHaveBeenCalledWith('Failed to copy content');
   });
+
+  it('exports plain text format with HTML tags stripped', async () => {
+    const user = userEvent.setup();
+    navigator.clipboard.writeText = vi.fn().mockResolvedValue(undefined);
+
+    renderWithProviders(
+      <BlogExport blog={mockBlog} open={true} onOpenChange={mockOnOpenChange} />
+    );
+
+    // Select plain text format
+    const select = screen.getByRole('combobox');
+    await user.click(select);
+    const textOption = screen.getByRole('option', { name: /plain text/i });
+    await user.click(textOption);
+
+    // Copy content and verify HTML was stripped
+    await user.click(screen.getByRole('button', { name: /copy/i }));
+
+    // The copied content should be plain text without HTML tags
+    expect(navigator.clipboard.writeText).toHaveBeenCalled();
+    const copiedContent = (navigator.clipboard.writeText as ReturnType<typeof vi.fn>).mock.calls[0][0];
+    expect(copiedContent).not.toContain('<h1>');
+    expect(copiedContent).not.toContain('<p>');
+    expect(copiedContent).toContain('Test Blog');
+    expect(copiedContent).toContain('This is test content.');
+  });
+
+  it('calls onOpenChange when Cancel button is clicked', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(
+      <BlogExport blog={mockBlog} open={true} onOpenChange={mockOnOpenChange} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /cancel/i }));
+
+    expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('handles blog without outline title gracefully', () => {
+    const blogWithoutTitle: Blog = {
+      ...mockBlog,
+      outline: undefined,
+    };
+
+    renderWithProviders(
+      <BlogExport blog={blogWithoutTitle} open={true} onOpenChange={mockOnOpenChange} />
+    );
+
+    expect(screen.getByText(/export your blog content/i)).toBeInTheDocument();
+  });
+
+  it('handles blog with empty content', async () => {
+    const user = userEvent.setup();
+    const blogWithEmptyContent: Blog = {
+      ...mockBlog,
+      content: '',
+      htmlContent: '',
+    };
+    navigator.clipboard.writeText = vi.fn().mockResolvedValue(undefined);
+
+    renderWithProviders(
+      <BlogExport blog={blogWithEmptyContent} open={true} onOpenChange={mockOnOpenChange} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /copy/i }));
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('');
+  });
+
+  it('shows truncated preview for long content', () => {
+    const longContent = 'A'.repeat(600);
+    const blogWithLongContent: Blog = {
+      ...mockBlog,
+      content: longContent,
+    };
+
+    renderWithProviders(
+      <BlogExport blog={blogWithLongContent} open={true} onOpenChange={mockOnOpenChange} />
+    );
+
+    // Preview should show truncation indicator
+    expect(screen.getByText(/\.\.\./)).toBeInTheDocument();
+  });
 });
