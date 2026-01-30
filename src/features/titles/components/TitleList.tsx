@@ -37,6 +37,7 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [titleToDelete, setTitleToDelete] = useState<Title | null>(null);
   const [pendingJobs, setPendingJobs] = useState<Array<{ jobId: string; date: string }>>([]);
+  const [pendingOutlineJobs, setPendingOutlineJobs] = useState<Array<{ jobId: string; titleName: string }>>([]);
 
   const handleJobComplete = useCallback(async (jobId: string) => {
     const job = pendingJobs.find(j => j.jobId === jobId);
@@ -50,6 +51,20 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
   const handleJobError = useCallback((jobId: string) => {
     toast.error('Failed to create new title.');
     setPendingJobs(prev => prev.filter(j => j.jobId !== jobId));
+  }, []);
+
+  const handleOutlineJobComplete = useCallback(async (jobId: string) => {
+    const job = pendingOutlineJobs.find(j => j.jobId === jobId);
+    if (job) {
+      toast.success(`Outline created successfully for "${job.titleName}"!`);
+      await queryClient.refetchQueries({ queryKey: ['outlines', organizationId] });
+      setPendingOutlineJobs(prev => prev.filter(j => j.jobId !== jobId));
+    }
+  }, [pendingOutlineJobs, queryClient, organizationId]);
+
+  const handleOutlineJobError = useCallback((jobId: string) => {
+    toast.error('Failed to create outline.');
+    setPendingOutlineJobs(prev => prev.filter(j => j.jobId !== jobId));
   }, []);
   
   const { data: titlesData, isLoading, error } = useQuery({
@@ -74,18 +89,28 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
 
   const handleApprove = useCallback(async (id: string) => {
     try {
+      const title = titles?.find((t) => t.id === id);
+
       // Update title status to APPROVED
       await updateStatus({ titleId: id, status: 'APPROVED' });
-      
+
       // Create outline for the approved title
-      await OutlinesApi.createOutlines(organizationId, id);
-      
-      toast.success('Title approved and outline creation started');
+      const response = await OutlinesApi.createOutlines(organizationId, id);
+
+      // Extract jobId from response
+      const jobId = response?.jobId;
+
+      if (jobId) {
+        setPendingOutlineJobs(prev => [...prev, { jobId, titleName: title?.title || 'Unknown' }]);
+        toast.success('Title approved and outline creation started');
+      } else {
+        toast.success('Title approved');
+      }
     } catch (error) {
       console.error('Failed to approve title:', error);
       toast.error('Failed to approve title. Please try again.');
     }
-  }, [updateStatus, organizationId]);
+  }, [updateStatus, organizationId, titles]);
 
   const handleReject = useCallback(async (id: string) => {
     try {
@@ -214,6 +239,16 @@ export const TitleList: React.FC<TitleListProps> = ({ organizationId, statusFilt
           date={date}
           onComplete={handleJobComplete}
           onError={handleJobError}
+        />
+      ))}
+      {/* Outline Job Pollers - poll for outline creation jobs */}
+      {pendingOutlineJobs.map(({ jobId, titleName }) => (
+        <JobPoller
+          key={jobId}
+          jobId={jobId}
+          date={titleName}
+          onComplete={handleOutlineJobComplete}
+          onError={handleOutlineJobError}
         />
       ))}
 

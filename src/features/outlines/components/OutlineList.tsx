@@ -40,6 +40,8 @@ export function OutlineList({ organizationId, onView, onEdit }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [rejectJobId, setRejectJobId] = useState<string | null>(null);
   const [rejectingTitle, setRejectingTitle] = useState<string | null>(null);
+  const [blogJobId, setBlogJobId] = useState<string | null>(null);
+  const [blogOutlineTitle, setBlogOutlineTitle] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -56,6 +58,22 @@ export function OutlineList({ organizationId, onView, onEdit }: Props) {
       toast.error(error || 'Failed to create new outline.');
       setRejectJobId(null);
       setRejectingTitle(null);
+    },
+  });
+
+  useJobStatus({
+    jobId: blogJobId,
+    enabled: !!blogJobId,
+    onComplete: async () => {
+      toast.success(`Blog created successfully${blogOutlineTitle ? ` for "${blogOutlineTitle}"` : ''}!`);
+      await queryClient.refetchQueries({ queryKey: ['blogs', organizationId] });
+      setBlogJobId(null);
+      setBlogOutlineTitle(null);
+    },
+    onError: (error) => {
+      toast.error(error || 'Failed to create blog.');
+      setBlogJobId(null);
+      setBlogOutlineTitle(null);
     },
   });
 
@@ -102,13 +120,24 @@ export function OutlineList({ organizationId, onView, onEdit }: Props) {
 
   const handleApprove = async (id: string) => {
     try {
+      const outline = outlines.find((o) => o.id === id);
+
       // Update outline status to APPROVED
       await updateStatusMutation.mutateAsync({ outlineId: id, status: "APPROVED" });
-      
+
       // Create blog for the approved outline
-      await BlogsApi.createBlog(id);
-      
-      toast.success("Outline approved and blog generation started");
+      const response = await BlogsApi.createBlog(id);
+
+      // Extract jobId from response
+      const jobId = response?.jobId;
+
+      if (jobId) {
+        setBlogJobId(jobId);
+        setBlogOutlineTitle(outline?.blogTitle?.title || null);
+        toast.success("Outline approved and blog generation started");
+      } else {
+        toast.success("Outline approved");
+      }
     } catch (error) {
       console.error("Failed to approve outline:", error);
       toast.error("Failed to approve outline. Please try again.");
